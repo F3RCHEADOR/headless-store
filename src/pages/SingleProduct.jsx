@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { getExpecificProduct } from "../lib/api";
 import Loader from "../components/utils/Loader";
 
-const SingleProduct = () => {
+const SingleProduct = ({ addToCart }) => {
   const { id } = useParams();
 
   const [singleProduct, setSingleProduc] = useState([]);
@@ -193,7 +193,10 @@ const SingleProduct = () => {
             </div>
             <div className="flex">
               {renderProductPrice(singleProduct)}
-              <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
+              <button
+                onClick={() => addToCart(singleProduct)}
+                className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+              >
                 Button
               </button>
               <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">

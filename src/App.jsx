@@ -11,17 +11,45 @@ import Checkout from "./pages/Checkout";
 import MyOrders from "./pages/MyOrders";
 import Account from "./pages/auth/Account";
 import Login from "./pages/auth/Login";
+import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
 function App() {
-
+  const [cart, setCart] = useState([]);
 
   const addToCart = (product) => {
-    console.log(product);
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const productExist = cart.find((item) => item.id === product.id);
+
+    if (productExist) {
+      productExist.quantity += 1;
+    } else {
+      product.quantity = 1;
+      cart.push(product);
+    }
+
+    setCart([...cart]);
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    toast.success("Product added to cart");
+    console.log(cart);
   };
+
+  const removeFromCart = (productExistent) => {
+    if (window.confirm("Are you sure want to this item?")){
+      const updateCart = cart.filter(item => item.id !== productExistent.id)
+      setCart(updateCart)
+      localStorage.setItem("cart", JSON.stringify(updateCart))
+
+      toast.remove("Product removed from Cart!")
+    }
+  }
 
   return (
     <Router>
-      <MainLayout>
+      <ToastContainer />
+      <MainLayout cartItem={cart}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -30,8 +58,11 @@ function App() {
             path="/products"
             element={<Products addToCart={addToCart} />}
           />
-          <Route path="/single-product/:id" element={<SingleProduct />} />
-          <Route path="/cart" element={<Cart />} />
+          <Route
+            path="/single-product/:id"
+            element={<SingleProduct addToCart={addToCart} />}
+          />
+          <Route path="/cart" element={<Cart onRemoveProduct={removeFromCart} cart={cart} />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/my-orders" element={<MyOrders />} />
           <Route path="/account" element={<Account />} />

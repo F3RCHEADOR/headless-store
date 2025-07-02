@@ -1,56 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // Datos de ejemplo para el carrito
-const initialCart = [
-  {
-    id: 1,
-    name: "Camiseta básica",
-    image: "https://via.placeholder.com/80x80.png?text=Producto+1",
-    price: 19.99,
-    quantity: 2,
-  },
-  {
-    id: 2,
-    name: "Pantalón jeans",
-    image: "https://via.placeholder.com/80x80.png?text=Producto+2",
-    price: 39.99,
-    quantity: 1,
-  },
-];
 
-const Cart = () => {
-  const [cart, setCart] = useState(initialCart);
+const Cart = ({ onRemoveProduct, cart }) => {
+  const [cartItems, setCartItems] = useState(cart) || [];
   const navigate = useNavigate();
 
   const handleGoToCheckout = () => {
     navigate("/checkout");
   };
 
-  const handleQuantityChange = (id, delta) => {
-    setCart((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-          : item
-      )
-    );
+  useEffect(() => {
+    setCartItems(cart);
+  }, [cart]);
+
+  const renderProductPrice = ({ price, regular_price, sale_price }) => {
+    if (sale_price) {
+      return (
+        <>
+          <div className="inline-flex space-x-1 mt-1 text-sm">
+            <span className="line-through">${regular_price || price}</span>
+            <span className="text-red-500">${sale_price}</span>
+          </div>
+        </>
+      );
+    }
+
+    return <span className=" mt-1 text-sm">${regular_price || price}</span>;
   };
 
-  const handleRemove = (id) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const getTotal = () => {
-    return cart
-      .reduce((acc, item) => acc + item.price * item.quantity, 0)
+  const calculeTotalItemsPrice = () => {
+    return cartItems
+      .reduce((total, item) => {
+        const price = item.price ? parseFloat(item.price) : 0;
+        return total + price * item.quantity;
+      }, 0)
       .toFixed(2);
   };
 
   return (
     <div className="container mx-auto px-4 py-8 min-h-[60vh]">
       <h1 className="text-3xl font-bold mb-6">Carrito de compras</h1>
-      {cart.length === 0 ? (
+      {cartItems.length === 0 ? (
         <div className="text-center text-gray-500 text-lg">
           Tu carrito está vacío.
         </div>
@@ -62,19 +54,19 @@ const Cart = () => {
                 <th className="py-3 px-4 text-left">Imagen</th>
                 <th className="py-3 px-4 text-left">Nombre</th>
                 <th className="py-3 px-4 text-center">Cantidad</th>
-                <th className="py-3 px-4 text-right">Precio</th>
+                <th className="py-3 px-4 text-right">Precio U</th>
                 <th className="py-3 px-4 text-right">Total</th>
                 <th className="py-3 px-4 text-center">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              {cart.map((item) => (
+              {cartItems?.map((item) => (
                 <tr key={item.id} className="border-b hover:bg-gray-50">
                   <td className="py-3 px-4">
                     <img
-                      src={item.image}
+                      src={item?.images?.[0].src}
                       alt={item.name}
-                      className="w-16 h-16 object-cover rounded"
+                      className="w-16 h-16 object-cover hover:scale-110 transition-all rounded"
                     />
                   </td>
                   <td className="py-3 px-4 font-medium">{item.name}</td>
@@ -82,7 +74,6 @@ const Cart = () => {
                     <div className="inline-flex items-center gap-2">
                       <button
                         className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                        onClick={() => handleQuantityChange(item.id, -1)}
                         disabled={item.quantity === 1}
                       >
                         -
@@ -90,24 +81,23 @@ const Cart = () => {
                       <span className="w-8 inline-block text-center">
                         {item.quantity}
                       </span>
-                      <button
-                        className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                        onClick={() => handleQuantityChange(item.id, 1)}
-                      >
+                      <button className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300">
                         +
                       </button>
                     </div>
                   </td>
                   <td className="py-3 px-4 text-right">
-                    ${item.price.toFixed(2)}
+                    {renderProductPrice(item)}
                   </td>
                   <td className="py-3 px-4 text-right">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    $
+                    {item.quantity *
+                      (item.sale_price || item.regular_price || item.price)}
                   </td>
                   <td className="py-3 px-4 text-center">
                     <button
+                      onClick={() => onRemoveProduct()}
                       className="text-red-500 hover:text-red-700 font-semibold"
-                      onClick={() => handleRemove(item.id)}
                     >
                       Eliminar
                     </button>
@@ -120,7 +110,9 @@ const Cart = () => {
             <div className="bg-gray-100 p-4 rounded-lg shadow w-full max-w-xs">
               <div className="flex justify-between mb-2">
                 <span className="font-semibold">Total:</span>
-                <span className="text-xl font-bold">${getTotal()}</span>
+                <span className="text-xl font-bold">
+                  ${calculeTotalItemsPrice()}
+                </span>
               </div>
               <button
                 onClick={handleGoToCheckout}
