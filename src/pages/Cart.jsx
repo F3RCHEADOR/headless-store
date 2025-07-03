@@ -11,6 +11,7 @@ const Cart = ({ onRemoveProduct, cart }) => {
     navigate("/checkout");
   };
 
+  
   useEffect(() => {
     setCartItems(cart);
   }, [cart]);
@@ -96,7 +97,7 @@ const Cart = ({ onRemoveProduct, cart }) => {
                   </td>
                   <td className="py-3 px-4 text-center">
                     <button
-                      onClick={() => onRemoveProduct()}
+                      onClick={() => onRemoveProduct(item)}
                       className="text-red-500 hover:text-red-700 font-semibold"
                     >
                       Eliminar

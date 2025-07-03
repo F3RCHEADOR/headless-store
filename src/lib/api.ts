@@ -42,10 +42,10 @@ const api = axios.create({
 
 export const getAllProducts = async () => {
   try {
-    const url = `${wordpress_url}products`;
+    const url = `${wordpress_url}wc/v3/products`;
     const oauthParams = generateOAuthSignature(url);
     console.log("URL:", url);
-    const Response = await api.get("products", {
+    const Response = await api.get("wc/v3/products", {
       params: oauthParams
     });
     console.log("Response data:", Response.data);
@@ -59,16 +59,28 @@ export const getAllProducts = async () => {
 
 export const getExpecificProduct = async (productId: string) => {
   try {
-    const url = `${wordpress_url}products/${productId}`;
+    const url = `${wordpress_url}wc/v3/products/${productId}`;
     const oauthParams = generateOAuthSignature(url);
     console.log("URL:", url);
-    const Response = await api.get(`products/${productId}`, {
+    const Response = await api.get(`wc/v3/products/${productId}`, {
       params: oauthParams
     });
     console.log("Response data:", Response.data);
     return Response.data;
   } catch (error) {
     console.error("Error fetching expecific product:", error.response ? error.response.data : error);
+    throw error;
+  }
+}
+
+export const registerStoreUser = async (userInfo) => {
+  try {
+    const response = await api.post(`${wordpress_url}wp/v2/users`, userInfo, {
+      headers: { "Authorization": "Basic " + btoa("admin:k)A&Kf$&&dIcRYil!sC9(cJk") }
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error.response ? error.response.data : error);
     throw error;
   }
 }
