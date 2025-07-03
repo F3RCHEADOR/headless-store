@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { registerStoreUser } from "../../lib/api";
+import { loginUser, registerStoreUser, getUserData } from "../../lib/api.ts";
 import Loader from "../../components/utils/Loader";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+export default function Login({ isAuthenticated }) {
   const [isLogin, setIsLogin] = useState(true);
   const [loader, setLoader] = useState(false);
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -21,26 +24,60 @@ export default function Login() {
     e.preventDefault();
     setLoader(true);
 
-    try {
-      await registerStoreUser({
-        username: form.username,
-        email: form.email,
-        password: form.password,
-        first_name: form.name,
-      });
+    if (!isLogin) {
+      try {
+        await registerStoreUser({
+          username: form.username,
+          email: form.email,
+          password: form.password,
+          first_name: form.name,
+        });
 
-      setForm({
-        name: "",
-        email: "",
-        username: "",
-        password: "",
-      });
-      toast.success("User registered");
-      setLoader(false);
-    } catch (error) {
-      console.log(error);
-      toast.error("User not registered");
+        setForm({
+          name: "",
+          email: "",
+          username: "",
+          password: "",
+        });
+        toast.success("User registered");
+      } catch (error) {
+        console.log(error);
+        toast.error("User not registered");
+      }
+    } else {
+      try {
+        const response = await loginUser({
+          username: form.username,
+          password: form.password,
+        });
+
+        setForm({
+          username: "",
+          password: "",
+        });
+
+        localStorage.setItem("auth_token", response.token);
+        toast.success("User Loged");
+        isAuthenticated(true);
+
+        const loggedUserData = {}
+        const userData = await getUserData(response.token);
+
+        loggedUserData.id = userData.id 
+        loggedUserData.name = userData.name 
+        loggedUserData.email = response.user_email
+        loggedUserData.username = response.user_nicename
+
+        localStorage.setItem("userData", JSON.stringify(loggedUserData))
+
+
+        navigate("../");
+      } catch (error) {
+        toast.error("Invalid login details");
+        console.log(error);
+      }
     }
+    setLoader(false);
   };
 
   const handleGoogle = () => {
@@ -79,16 +116,17 @@ export default function Login() {
                   required
                 />
               </div>
+
               <div>
-                <label className="block text-gray-700 mb-1" htmlFor="username">
-                  Username
+                <label className="block text-gray-700 mb-1" htmlFor="email">
+                  Email
                 </label>
                 <input
                   className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  type="text"
-                  id="username"
-                  name="username"
-                  value={form.username}
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={form.email}
                   onChange={handleChange}
                   autoComplete="off"
                   required
@@ -96,21 +134,23 @@ export default function Login() {
               </div>
             </>
           )}
+
           <div>
-            <label className="block text-gray-700 mb-1" htmlFor="email">
-              Email
+            <label className="block text-gray-700 mb-1" htmlFor="username">
+              Username
             </label>
             <input
               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              type="email"
-              id="email"
-              name="email"
-              value={form.email}
+              type="text"
+              id="username"
+              name="username"
+              value={form.username}
               onChange={handleChange}
               autoComplete="off"
               required
             />
           </div>
+
           <div>
             <label className="block text-gray-700 mb-1" htmlFor="password">
               Contraseña

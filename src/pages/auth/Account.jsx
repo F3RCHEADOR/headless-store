@@ -1,28 +1,8 @@
-import React, { useState } from "react";
-
-const initialData = {
-  name: "Juan Pérez",
-  email: "juan@email.com",
-  username: "juanperez",
-};
-
-export default function Account() {
-  const [form, setForm] = useState(initialData);
-  const [original, setOriginal] = useState(initialData);
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const isChanged =
-    form.name !== original.name ||
-    form.email !== original.email ||
-    form.username !== original.username;
+export default function Account({ loggedUserData }) {
+ 
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    setOriginal(form);
-    // Aquí iría la lógica para actualizar en backend
     alert("Datos actualizados");
   };
 
@@ -39,8 +19,7 @@ export default function Account() {
             type="text"
             id="name"
             name="name"
-            value={form.name}
-            onChange={handleChange}
+            value={loggedUserData.name}
             autoComplete="off"
           />
         </div>
@@ -53,8 +32,7 @@ export default function Account() {
             type="email"
             id="email"
             name="email"
-            value={form.email}
-            onChange={handleChange}
+            value={loggedUserData.email}
             autoComplete="off"
           />
         </div>
@@ -67,19 +45,13 @@ export default function Account() {
             type="text"
             id="username"
             name="username"
-            value={form.username}
-            onChange={handleChange}
+            value={loggedUserData.username}
             autoComplete="off"
           />
         </div>
         <button
           type="submit"
-          className={`w-full py-2 rounded text-white font-semibold transition ${
-            isChanged
-              ? "bg-blue-600 hover:bg-blue-700"
-              : "bg-gray-400 cursor-not-allowed"
-          }`}
-          disabled={!isChanged}
+          className="w-full py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
         >
           Actualizar
         </button>

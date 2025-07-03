@@ -84,3 +84,80 @@ export const registerStoreUser = async (userInfo) => {
     throw error;
   }
 }
+
+
+export const loginUser = async (userInfo) => {
+  try {
+    const response = await api.post(`${wordpress_url}jwt-auth/v1/token`, userInfo)
+    return response.data
+  } catch (error) {
+    console.error(error.response ? error.response.data : error);
+    throw error;
+  }
+}
+
+//Create Order in Woocommerce
+
+export const newOrder = async (userInfo) => {
+  try {
+    const cartItems = JSON.parse(localStorage?.getItem?.("cart") || "[]");
+    console.log(cartItems);
+
+    if (!cartItems.length) {
+      console.log("cart is empty")
+      return false
+    }
+
+    const lineItems = cartItems.map((item) => ({
+      product_id: item.id,
+      quantity: item.quantity
+    }))
+
+    console.log(lineItems)
+
+    const data = {
+      ...userInfo,
+      line_items: lineItems
+
+    }
+
+    console.log(data)
+
+    const url = `${wordpress_url}wc/v3/orders`
+
+    const oauthParams = generateOAuthSignature(url, "POST")
+
+    //generate oauth header
+
+    const oauthHeader = Object.keys(oauthParams).map((key) => `${key}=${encodeURIComponent(oauthParams[key])}`).join(", ")
+
+    const response = await api.post(`wc/v3/orders`, data, {
+      headers: {
+        Authorization: `OAuth ${oauthHeader}`
+      }
+    })
+
+    return response.data
+
+  } catch (error) {
+    console.error(error.response ? error.response.data : error);
+    throw error;
+  }
+}
+
+
+export const getUserData = async (token: string) => {
+
+  try {
+    const response = await api.get(`${wordpress_url}wp/v2/users/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.error(error.response ? error.response.data : error);
+    throw error;
+  }
+}

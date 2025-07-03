@@ -11,11 +11,13 @@ import Checkout from "./pages/Checkout";
 import MyOrders from "./pages/MyOrders";
 import Account from "./pages/auth/Account";
 import Login from "./pages/auth/Login";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 
 function App() {
   const [cart, setCart] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loggedUserData, setLoggerUserData] = useState({});
 
   const addToCart = (product) => {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -37,19 +39,55 @@ function App() {
   };
 
   const removeFromCart = (productExistent) => {
-    if (window.confirm("Are you sure want to this item?")){
-      const updateCart = cart.filter(item => item.id !== productExistent.id)
-      setCart(updateCart)
-      localStorage.setItem("cart", JSON.stringify(updateCart))
+    if (window.confirm("Are you sure want to this item?")) {
+      const updateCart = cart.filter((item) => item.id !== productExistent.id);
+      setCart(updateCart);
+      localStorage.setItem("cart", JSON.stringify(updateCart));
 
-      toast.remove("Product removed from Cart!")
+      toast.remove("Product removed from Cart!");
     }
-  }
+  };
+
+  const clearCart = () => {
+    localStorage.removeItem("cart");
+    setCart([]);
+  };
+
+  const setUserLoggedStatus = (status) => {
+    setIsAuthenticated(status);
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("auth_token");
+
+    if (token) setIsAuthenticated(true);
+
+    const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+
+    if (cartItems) setCart(cartItems);
+
+    const userData = localStorage.getItem("userData");
+
+    setLoggerUserData(JSON.parse(userData));
+  }, []);
+
+  const setUserLogout = () => {
+    localStorage.removeItem("auth_token");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("cart");
+    setIsAuthenticated(false);
+    setLoggerUserData({});
+    setCart([]);
+  };
 
   return (
     <Router>
       <ToastContainer />
-      <MainLayout cartItem={cart}>
+      <MainLayout
+        isAuthenticated={isAuthenticated}
+        setUserLogout={setUserLogout}
+        cartItem={cart}
+      >
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -62,11 +100,25 @@ function App() {
             path="/single-product/:id"
             element={<SingleProduct addToCart={addToCart} />}
           />
-          <Route path="/cart" element={<Cart onRemoveProduct={removeFromCart} cart={cart} />} />
-          <Route path="/checkout" element={<Checkout />} />
+          <Route
+            path="/cart"
+            element={<Cart onRemoveProduct={removeFromCart} cart={cart} />}
+          />
+          <Route
+            path="/checkout"
+            element={
+              <Checkout clearCart={clearCart} loggedUserData={loggedUserData} />
+            }
+          />
           <Route path="/my-orders" element={<MyOrders />} />
-          <Route path="/account" element={<Account />} />
-          <Route path="/login" element={<Login />} />
+          <Route
+            path="/account"
+            element={<Account loggedUserData={loggedUserData} />}
+          />
+          <Route
+            path="/login"
+            element={<Login isAuthenticated={setUserLoggedStatus} />}
+          />
         </Routes>
       </MainLayout>
     </Router>
