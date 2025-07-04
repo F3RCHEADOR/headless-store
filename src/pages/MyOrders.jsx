@@ -2,88 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { getOrdersByCustomer } from "../lib/api";
 import Loader from "../components/utils/Loader";
-
-// Modal de detalles de la orden
-const OrderDetailModal = ({ order, onClose, onDownload }) => {
-  if (!order) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg p-8 max-w-2xl w-full relative">
-        <button
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-          onClick={onClose}
-        >
-          ✕
-        </button>
-        <h2 className="text-2xl font-bold mb-4">Pedido #{order.number}</h2>
-        <div className="mb-2">
-          <span className="font-semibold">Estado:</span> {order.status}
-        </div>
-        <div className="mb-2">
-          <span className="font-semibold">Fecha:</span>{" "}
-          {order.date_created?.split("T")[0]}
-        </div>
-        <div className="mb-2">
-          <span className="font-semibold">Total:</span> {order.currency_symbol}
-          {order.total}
-        </div>
-        <div className="mb-2">
-          <span className="font-semibold">Método de pago:</span>{" "}
-          {order.payment_method_title}
-        </div>
-        <div className="mb-2">
-          <span className="font-semibold">Dirección de envío:</span>
-          <div className="ml-2 text-sm">
-            {order.billing.first_name} {order.billing.last_name}
-            <br />
-            {order.billing.address_1} {order.billing.address_2}
-            <br />
-            {order.billing.city}, {order.billing.state}, {order.billing.country}
-            <br />
-            CP: {order.billing.postcode}
-            <br />
-            Email: {order.billing.email}
-            <br />
-            Tel: {order.billing.phone}
-          </div>
-        </div>
-        <div className="mt-4">
-          <h3 className="font-semibold mb-2">Productos:</h3>
-          <ul className="divide-y">
-            {order.line_items.map((item) => (
-              <li key={item.id} className="flex items-center py-2">
-                <img
-                  src={item.image?.src}
-                  alt={item.name}
-                  className="w-14 h-14 object-cover rounded mr-4 border"
-                />
-                <div>
-                  <div className="font-medium">{item.name}</div>
-                  <div className="text-sm text-gray-600">
-                    Cantidad: {item.quantity} | Precio unitario:{" "}
-                    {order.currency_symbol}
-                    {item.price}
-                  </div>
-                  <div className="text-sm text-gray-600">
-                    Subtotal: {order.currency_symbol}
-                    {item.subtotal}
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <button
-          className="mt-6 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-          onClick={() => onDownload(order)}
-        >
-          Descargar Detalles
-        </button>
-      </div>
-    </div>
-  );
-};
+import OrderDetailModal from "../components/orders/ModalOrders";
 
 const MyOrders = ({ loggedUserData }) => {
   const [orderItems, setOrderItems] = useState([]);
@@ -91,13 +10,22 @@ const MyOrders = ({ loggedUserData }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchAllOrder = async (userId) => {
-    try {
-      const response = await getOrdersByCustomer(userId);
-      setOrderItems(response);
-    } catch (error) {
-      console.error(error);
+    const cachedOrders = localStorage.getItem("userOrders");
+
+    if (cachedOrders) {
+      setOrderItems(JSON.parse(cachedOrders));
+      setIsLoading(false);
+    } else {
+      try {
+        const response = await getOrdersByCustomer(userId);
+        setOrderItems(response);
+        localStorage.setItem("userOrders", JSON.stringify(response));
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
-    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -105,6 +33,12 @@ const MyOrders = ({ loggedUserData }) => {
       fetchAllOrder(loggedUserData.id);
     }
   }, [loggedUserData]);
+
+  const refreshOrders = async () => {
+    localStorage.removeItem("userOrders");
+    setIsLoading(true);
+    await fetchAllOrder(loggedUserData.id);
+  };
 
   // Descarga los detalles como .txt
   const handleDownload = (order) => {
@@ -197,6 +131,14 @@ const MyOrders = ({ loggedUserData }) => {
         onClose={() => setSelectedOrder(null)}
         onDownload={handleDownload}
       />
+      <div className="flex items-center justify-end mt-2">
+        <button
+          onClick={refreshOrders}
+          className="bg-green-300 border-green-400 border-2 text-sm font-bold rounded-md px-2 py-1 text-center cursor-pointer"
+        >
+          Refresh Orders
+        </button>
+      </div>
     </div>
   );
 };

@@ -38,13 +38,27 @@ function App() {
     console.log(cart);
   };
 
+  const reduceFromCart = (product) => {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const productExist = cart.find((item) => item.id === product.id);
+
+    if (productExist && productExist.quantity > 1) {
+      productExist.quantity -= 1;
+      setCart([...cart]);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      toast.info("Product reduce from cart");
+    } else {
+      removeFromCart(product);
+    }
+  };
+
   const removeFromCart = (productExistent) => {
     if (window.confirm("Are you sure want to this item?")) {
       const updateCart = cart.filter((item) => item.id !== productExistent.id);
       setCart(updateCart);
       localStorage.setItem("cart", JSON.stringify(updateCart));
 
-      toast.remove("Product removed from Cart!");
+      toast.warning("Product removed from Cart!");
     }
   };
 
@@ -75,6 +89,7 @@ function App() {
     localStorage.removeItem("auth_token");
     localStorage.removeItem("userData");
     localStorage.removeItem("cart");
+    localStorage.removeItem("userOrders");
     setIsAuthenticated(false);
     setLoggerUserData({});
     setCart([]);
@@ -98,11 +113,23 @@ function App() {
           />
           <Route
             path="/single-product/:id"
-            element={<SingleProduct addToCart={addToCart} />}
+            element={
+              <SingleProduct
+                addToCart={addToCart}
+                reduceFromCart={reduceFromCart}
+              />
+            }
           />
           <Route
             path="/cart"
-            element={<Cart onRemoveProduct={removeFromCart} cart={cart} />}
+            element={
+              <Cart
+                onRemoveProduct={removeFromCart}
+                cart={cart}
+                reduceFromCart={reduceFromCart}
+                addToCart={addToCart}
+              />
+            }
           />
           <Route
             path="/checkout"

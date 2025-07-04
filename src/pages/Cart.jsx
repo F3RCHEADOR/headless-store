@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 // Datos de ejemplo para el carrito
 
-const Cart = ({ onRemoveProduct, cart }) => {
+const Cart = ({ onRemoveProduct, cart, reduceFromCart, addToCart }) => {
   const [cartItems, setCartItems] = useState(cart) || [];
   const navigate = useNavigate();
 
@@ -74,15 +74,15 @@ const Cart = ({ onRemoveProduct, cart }) => {
                   <td className="py-3 px-4 text-center">
                     <div className="inline-flex items-center gap-2">
                       <button
-                        className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                        disabled={item.quantity === 1}
+                        className={`${item.quantity === 1 ? 'bg-red-500  hover:bg-red-600' : 'bg-red-400 hover:bg-red-500' } cursor-pointer text-white px-2 py-1 rounded`}
+                        onClick={() => reduceFromCart(item)}
                       >
                         -
                       </button>
                       <span className="w-8 inline-block text-center">
                         {item.quantity}
                       </span>
-                      <button className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300">
+                      <button onClick={() => addToCart(item)} className="px-2 py-1 bg-green-300 rounded hover:bg-green-400 cursor-pointer">
                         +
                       </button>
                     </div>
