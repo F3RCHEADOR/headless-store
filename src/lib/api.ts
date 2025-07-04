@@ -161,3 +161,23 @@ export const getUserData = async (token: string) => {
     throw error;
   }
 }
+
+export const getOrdersByCustomer = async (customerId : string) => {
+
+  try {
+    const url = `${wordpress_url}wc/v3/orders`;
+    const oauthParams = generateOAuthSignature(url, "GET", {
+      customer: customerId  
+    });
+    const response = await api.get("wc/v3/orders" , {
+      params: {
+        ...oauthParams,
+        customer: customerId
+      }
+    })
+    return response.data;
+  } catch (error) {
+    console.error(error.response ? error.response.data : error);
+    throw error;
+  }
+}

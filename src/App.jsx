@@ -110,7 +110,10 @@ function App() {
               <Checkout clearCart={clearCart} loggedUserData={loggedUserData} />
             }
           />
-          <Route path="/my-orders" element={<MyOrders />} />
+          <Route
+            path="/my-orders"
+            element={<MyOrders loggedUserData={loggedUserData} />}
+          />
           <Route
             path="/account"
             element={<Account loggedUserData={loggedUserData} />}

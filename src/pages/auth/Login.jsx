@@ -69,7 +69,7 @@ export default function Login({ isAuthenticated }) {
         loggedUserData.username = response.user_nicename
 
         localStorage.setItem("userData", JSON.stringify(loggedUserData))
-
+        
 
         navigate("../");
       } catch (error) {
