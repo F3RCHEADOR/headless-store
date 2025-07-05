@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getExpecificProduct } from "../lib/api";
 import Loader from "../components/utils/Loader";
+import { useMyStore } from "../lib/useMyStore";
 
 const SingleProduct = ({ addToCart }) => {
+
+  const {renderProductPrice} = useMyStore()
   const { id } = useParams();
 
   const [singleProduct, setSingleProduc] = useState([]);
@@ -19,20 +22,7 @@ const SingleProduct = ({ addToCart }) => {
     fetchProduct();
   }, [id]);
 
-  const renderProductPrice = ({ price, regular_price, sale_price }) => {
-    if (sale_price) {
-      return (
-        <>
-          <div className="inline-flex space-x-1 mt-1 text-sm">
-            <span className="line-through">${regular_price || price}</span>
-            <span className="text-red-500">${sale_price}</span>
-          </div>
-        </>
-      );
-    }
-
-    return <span className=" mt-1 text-sm">${regular_price || price}</span>;
-  };
+  
 
   return loader ? (
     <Loader />
@@ -49,8 +39,8 @@ const SingleProduct = ({ addToCart }) => {
           <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
             <h2 className="text-sm title-font text-gray-500 tracking-widest">
               BRAND NAME -{" "}
-              {singleProduct.categories?.map((category) => (
-                <span>{category.name || ""}</span>
+              {singleProduct.categories?.map((category, index) => (
+                <span key={index}>{category.name || ""}</span>
               ))}
             </h2>
             <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">

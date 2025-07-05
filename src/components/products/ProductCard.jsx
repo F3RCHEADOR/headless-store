@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useMyStore } from "../../lib/useMyStore.js";
 
 const ProductCard = ({
   id,
@@ -12,27 +13,10 @@ const ProductCard = ({
 }) => {
   const navigate = useNavigate();
 
+  const { renderProductPrice } = useMyStore();
+
   const handleClick = () => {
     navigate(`/single-product/${id}`);
-  };
-
-  const renderProductPrice = ({
-    price,
-    regular_price,
-    sale_price
-  }) => {
-    if (sale_price) {
-      return (
-        <>
-          <div className="inline-flex space-x-1 mt-1 text-sm">
-            <span className="line-through">${regular_price || price}</span>
-            <span className="text-red-500">${sale_price}</span>
-          </div>
-        </>
-      );
-    }
-
-    return <span className=" mt-1 text-sm">${regular_price || price}</span>;
   };
 
   return (
@@ -74,7 +58,17 @@ const ProductCard = ({
       </div>
 
       <button
-        onClick={() => addToCart({ id, images, name, price, regular_price, sale_price, categories })}
+        onClick={() =>
+          addToCart({
+            id,
+            images,
+            name,
+            price,
+            regular_price,
+            sale_price,
+            categories,
+          })
+        }
         className="flex items-center justify-center mx-auto bg-blue-200 border-2 px-2 py-1 border-blue-300 rounded-md hover:scale-x-105 transition-all"
       >
         Add To Cart
