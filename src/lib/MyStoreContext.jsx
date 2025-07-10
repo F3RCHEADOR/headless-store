@@ -12,15 +12,15 @@ export const MyStoreProvider = ({ children }) => {
     if (sale_price) {
       return (
         <>
-          <div className="inline-flex space-x-1 mt-1 text-sm">
-            <span className="line-through">${regular_price || price}</span>
-            <span className="text-red-500">${sale_price}</span>
+          <div className="inline-flex space-x-2">
+            <div className="stat-value line-through text-lg text-secondary">${regular_price || price}</div>
+            <div className="stat-value text-lg text-red-500">${sale_price}</div>
           </div>
         </>
       );
     }
 
-    return <span className=" mt-1 text-sm">${regular_price || price}</span>;
+    return <div className="stat-value mt-1 text-lg text-secondary">${regular_price || price}</div>;
   };
 
   const addToCart = (product) => {

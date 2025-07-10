@@ -82,48 +82,55 @@ const MyOrders = ({ loggedUserData }) => {
       {orderItems.length === 0 ? (
         <p className="text-center text-gray-500">No tienes pedidos aún.</p>
       ) : (
-        <ul className="space-y-6">
-          {orderItems.map((order) => (
-            <li
-              key={order.id}
-              className="border rounded-lg shadow-sm p-6 bg-white"
-            >
-              <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-2">
-                <h2 className="text-xl font-semibold">
-                  Pedido <span className="text-blue-600">{order.number}</span>
-                </h2>
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium  bg-gray-100 text-gray-600`}
-                >
-                  {order.status}
-                </span>
-              </div>
-              <div className="flex flex-col md:flex-row md:justify-between text-gray-600 mb-4">
-                <p>
-                  Fecha:{" "}
-                  <span className="font-medium">
-                    {order.date_created?.split("T")[0]}
-                  </span>
-                </p>
-                <p>
-                  Total:{" "}
-                  <span className="font-medium">
+        <div className="overflow-x-auto">
+          <table className="table table-xs table-pin-rows table-pin-cols">
+            <thead>
+              <tr>
+                <th>#</th>
+                <td>Número</td>
+                <td>Estado</td>
+                <td>Fecha</td>
+                <td>Total</td>
+                <td>Método de pago</td>
+                <td>Acciones</td>
+              </tr>
+            </thead>
+            <tbody>
+              {orderItems.map((order, idx) => (
+                <tr key={order.id}>
+                  <th>{idx + 1}</th>
+                  <td>{order.number}</td>
+                  <td>{order.status}</td>
+                  <td>{order.date_created?.split("T")[0]}</td>
+                  <td>
                     {order.currency_symbol}
                     {order.total}
-                  </span>
-                </p>
-              </div>
-              <div className="flex justify-end">
-                <button
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-                  onClick={() => setSelectedOrder(order)}
-                >
-                  Ver detalles
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+                  </td>
+                  <td>{order.payment_method_title}</td>
+                  <td>
+                    <button
+                      className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-xs"
+                      onClick={() => setSelectedOrder(order)}
+                    >
+                      Ver detalles
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th>#</th>
+                <td>Número</td>
+                <td>Estado</td>
+                <td>Fecha</td>
+                <td>Total</td>
+                <td>Método de pago</td>
+                <td>Acciones</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
       )}
       {/* Modal de detalles */}
       <OrderDetailModal

@@ -22,7 +22,7 @@ const Product = ({ addToCart }) => {
   ) : (
     <section className="text-gray-600 body-font">
       <div className="container px-5 py-24 mx-auto">
-        <div className="flex flex-wrap -m-4">
+        <div className="grid gap-6 py-2 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {products.map((singleProduct, index) => (
             <ProductCard key={index} {...singleProduct} addToCart={addToCart} />
           ))}

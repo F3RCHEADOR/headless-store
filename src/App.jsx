@@ -13,6 +13,7 @@ import Account from "./pages/auth/Account";
 import Login from "./pages/auth/Login";
 import { ToastContainer } from "react-toastify";
 import { useMyStore } from "./lib/useMyStore";
+import ThemeToggle from "./components/utils/ThemeToggle";
 
 function App() {
   const {

@@ -40,6 +40,40 @@ const api = axios.create({
   baseURL: wordpress_url
 })
 
+export const getEntradas = async (entrada: string) => {
+  try {
+    const response = await api.get(`${wordpress_url}wp/v2/posts?slug=${entrada}&_embed`);
+
+    const posts: Array<{
+      title: string;
+      excerpt: string;
+      content: string;
+      date: string;
+      slug: string;
+      featuredImage: string | null;
+    }> = response.data.map((post: any) => {
+      const {
+        title: { rendered: title },
+        excerpt: { rendered: excerpt },
+        content: { rendered: content },
+        date,
+        slug
+      } = post;
+
+      const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url ?? null;
+
+      return { title, excerpt, content, date, slug, featuredImage };
+    });
+
+    return posts;
+  } catch (error: any) {
+    console.error(error.response ? error.response.data : error);
+    throw error;
+  }
+};
+
+
+
 export const getAllProducts = async () => {
   try {
     const url = `${wordpress_url}wc/v3/products`;
@@ -59,10 +93,10 @@ export const getAllProducts = async () => {
 
 export const getExpecificProduct = async (productId: string) => {
   try {
-    const url = `${wordpress_url}wc/v3/products/${productId}`;
+    const url = `${wordpress_url}custom/v1/product/${productId}`;
     const oauthParams = generateOAuthSignature(url);
     console.log("URL:", url);
-    const Response = await api.get(`wc/v3/products/${productId}`, {
+    const Response = await api.get(`custom/v1/product/${productId}`, {
       params: oauthParams
     });
     console.log("Response data:", Response.data);
@@ -162,14 +196,14 @@ export const getUserData = async (token: string) => {
   }
 }
 
-export const getOrdersByCustomer = async (customerId : string) => {
+export const getOrdersByCustomer = async (customerId: string) => {
 
   try {
     const url = `${wordpress_url}wc/v3/orders`;
     const oauthParams = generateOAuthSignature(url, "GET", {
-      customer: customerId  
+      customer: customerId
     });
-    const response = await api.get("wc/v3/orders" , {
+    const response = await api.get("wc/v3/orders", {
       params: {
         ...oauthParams,
         customer: customerId

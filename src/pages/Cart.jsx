@@ -49,29 +49,31 @@ const Cart = ({ onRemoveProduct, cart, reduceFromCart, addToCart }) => {
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white rounded-lg shadow">
+          <table className="table table-xs table-pin-rows table-pin-cols">
             <thead>
-              <tr className="bg-gray-100 text-gray-700">
-                <th className="py-3 px-4 text-left">Imagen</th>
-                <th className="py-3 px-4 text-left">Nombre</th>
-                <th className="py-3 px-4 text-center">Cantidad</th>
-                <th className="py-3 px-4 text-right">Precio U</th>
-                <th className="py-3 px-4 text-right">Total</th>
-                <th className="py-3 px-4 text-center">Acciones</th>
+              <tr>
+                <th>#</th>
+                <th>Imagen</th>
+                <th>Nombre</th>
+                <th className="text-center">Cantidad</th>
+                <th className="text-right">Precio U</th>
+                <th className="text-right">Total</th>
+                <th className="text-center">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              {cartItems?.map((item) => (
-                <tr key={item.id} className="border-b hover:bg-gray-50">
-                  <td className="py-3 px-4">
+              {cartItems?.map((item, idx) => (
+                <tr key={item.id}>
+                  <th>{idx + 1}</th>
+                  <td>
                     <img
                       src={item?.images?.[0].src}
                       alt={item.name}
                       className="w-16 h-16 object-cover hover:scale-110 transition-all rounded"
                     />
                   </td>
-                  <td className="py-3 px-4 font-medium">{item.name}</td>
-                  <td className="py-3 px-4 text-center">
+                  <td className="font-medium">{item.name}</td>
+                  <td className="text-center">
                     <div className="inline-flex items-center gap-2">
                       <button
                         className={`${item.quantity === 1 ? 'bg-red-500  hover:bg-red-600' : 'bg-red-400 hover:bg-red-500' } cursor-pointer text-white px-2 py-1 rounded`}
@@ -87,15 +89,15 @@ const Cart = ({ onRemoveProduct, cart, reduceFromCart, addToCart }) => {
                       </button>
                     </div>
                   </td>
-                  <td className="py-3 px-4 text-right">
+                  <td className="text-right">
                     {renderProductPrice(item)}
                   </td>
-                  <td className="py-3 px-4 text-right">
+                  <td className="text-right">
                     $
                     {item.quantity *
                       (item.sale_price || item.regular_price || item.price)}
                   </td>
-                  <td className="py-3 px-4 text-center">
+                  <td className="text-center">
                     <button
                       onClick={() => onRemoveProduct(item)}
                       className="text-red-500 hover:text-red-700 font-semibold"
@@ -106,22 +108,23 @@ const Cart = ({ onRemoveProduct, cart, reduceFromCart, addToCart }) => {
                 </tr>
               ))}
             </tbody>
+            <tfoot>
+              <tr>
+                <th colSpan={5} className="text-right font-semibold">Total:</th>
+                <th className="text-right text-xl font-bold">
+                  ${calculeTotalItemsPrice()}
+                </th>
+                <th></th>
+              </tr>
+            </tfoot>
           </table>
           <div className="flex justify-end mt-6">
-            <div className="bg-gray-100 p-4 rounded-lg shadow w-full max-w-xs">
-              <div className="flex justify-between mb-2">
-                <span className="font-semibold">Total:</span>
-                <span className="text-xl font-bold">
-                  ${calculeTotalItemsPrice()}
-                </span>
-              </div>
-              <button
-                onClick={handleGoToCheckout}
-                className="w-full mt-4 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded transition"
-              >
-                Ir a pagar
-              </button>
-            </div>
+            <button
+              onClick={handleGoToCheckout}
+              className="w-full max-w-xs bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded transition"
+            >
+              Ir a pagar
+            </button>
           </div>
         </div>
       )}
