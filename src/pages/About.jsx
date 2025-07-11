@@ -1,17 +1,39 @@
-const About = () => {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-      <div className="text-center max-w-4xl mx-auto px-6">
-        <h1 className="text-5xl font-bold text-gray-800 mb-6 tracking-tight">
-          Sobre Nosotros
-        </h1>
-        <h3 className="text-2xl font-medium text-gray-600 leading-relaxed">
-          Somos una empresa comprometida con la excelencia y la innovación, 
-          dedicada a brindar soluciones de calidad para nuestros clientes
-        </h3>
-      </div>
-    </div>
-  )
-}
+// src/pages/About.jsx
 
-export default About
+export default function About() {
+  return (
+    <section className="min-h-screen bg-base-100 px-4 py-16">
+      <div className="max-w-5xl mx-auto">
+        <h1 className="text-4xl font-bold text-center text-primary mb-10">
+          About <span className="text-secondary">Headless Store</span>
+        </h1>
+
+        <div className="grid md:grid-cols-2 gap-10 items-center">
+          {/* Imagen destacada */}
+          <div className="rounded-xl overflow-hidden shadow-xl">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/10220/10220186.png"
+              alt="About Headless Store"
+              className="w-3/4  object-cover"
+            />
+          </div>
+
+          {/* Texto descriptivo */}
+          <div className="space-y-6">
+            <p className="text-base-content leading-relaxed">
+              <strong>Headless Store</strong> is a modern eCommerce solution built with React and powered by WordPress and WooCommerce. By separating the frontend from the backend, we create a seamless, high-performance shopping experience that adapts perfectly to any device.
+            </p>
+
+            <p className="text-base-content leading-relaxed">
+              Our goal is to provide users with a fast, responsive, and visually appealing interface while taking full advantage of WordPress's flexibility. We focus on usability, clean design, and smooth interactions that make shopping simple and enjoyable.
+            </p>
+
+            <p className="text-base-content leading-relaxed">
+              Whether you are browsing products, adding to cart, or checking out, everything works flawlessly thanks to our headless architecture. We believe in blending powerful backend technology with beautiful frontend experiences.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
