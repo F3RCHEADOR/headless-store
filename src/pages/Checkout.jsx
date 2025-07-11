@@ -67,45 +67,193 @@ function Checkout({ clearCart, loggedUserData }) {
   }
 
   return (
-    <div className="max-w-5xl w-full mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      <h1 className="text-2xl font-bold mb-6 text-center">Checkout</h1>
-      <form onSubmit={handleSubmit} className="w-full grid md:grid-cols-2 gap-4">
-        {[
-          { label: "Nombre", name: "first_name" },
-          { label: "Apellido", name: "last_name" },
-          { label: "Dirección", name: "address_1" },
-          { label: "Departamento, piso, etc. (opcional)", name: "address_2" },
-          { label: "Ciudad", name: "city" },
-          { label: "Estado/Provincia", name: "state" },
-          { label: "Código Postal", name: "postcode" },
-          { label: "País", name: "country" },
-          { label: "Email", name: "email", type: "email" },
-          { label: "Teléfono", name: "phone", type: "tel" },
-        ].map(({ label, name, type = "text" }) => (
-          <div key={name}>
-            <label className="block text-sm font-medium mb-1" htmlFor={name}>
-              {label}
-            </label>
-            <input
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              type={type}
-              name={name}
-              id={name}
-              value={form.billing[name]}
-              onChange={handleChange}
-              required={name !== "address_2"} // el único opcional
-            />
-          </div>
-        ))}
+    <form
+      onSubmit={handleSubmit}
+      className="w-full max-w-3xl mx-auto px-2 py-8 flex flex-col items-center justify-center md:h-screen mt-12 md:-mt-12"
+    >
+      <fieldset
+        className="
+          bg-base-200 border-base-300 rounded-box grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 w-full"
+      >
+        <legend className="fieldset-legend">datos de la compra</legend>
+        {/* Nombre */}
+        <div className="flex flex-col">
+          <label className="label text-sm mb-2" htmlFor="first_name">
+            Nombre
+          </label>
+          <input
+            type="text"
+            className="input w-full"
+            placeholder="Nombre"
+            name="first_name"
+            id="first_name"
+            value={form.billing.first_name}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
+        {/* Apellido */}
+        <div className="flex flex-col">
+          <label className="label text-sm mb-2" htmlFor="last_name">
+            Apellido
+          </label>
+          <input
+            type="text"
+            className="input w-full"
+            placeholder="Apellido"
+            name="last_name"
+            id="last_name"
+            value={form.billing.last_name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Dirección */}
+        <div className="flex flex-col ">
+          <label className="label text-sm mb-2" htmlFor="address_1">
+            Dirección
+          </label>
+          <input
+            type="text"
+            className="input w-full"
+            placeholder="Dirección"
+            name="address_1"
+            id="address_1"
+            value={form.billing.address_1}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Departamento, piso, etc. */}
+        <div className="flex flex-col ">
+          <label className="label text-sm mb-2" htmlFor="address_2">
+            Departamento, piso, etc. (opcional)
+          </label>
+          <input
+            type="text"
+            className="input w-full"
+            placeholder="Departamento, piso, etc."
+            name="address_2"
+            id="address_2"
+            value={form.billing.address_2}
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* Ciudad */}
+        <div className="flex flex-col">
+          <label className="label text-sm mb-2" htmlFor="city">
+            Ciudad
+          </label>
+          <input
+            type="text"
+            className="input w-full"
+            placeholder="Ciudad"
+            name="city"
+            id="city"
+            value={form.billing.city}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Estado/Provincia */}
+        <div className="flex flex-col">
+          <label className="label text-sm mb-2" htmlFor="state">
+            Estado/Provincia
+          </label>
+          <input
+            type="text"
+            className="input w-full"
+            placeholder="Estado/Provincia"
+            name="state"
+            id="state"
+            value={form.billing.state}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Código Postal */}
+        <div className="flex flex-col">
+          <label className="label text-sm mb-2" htmlFor="postcode">
+            Código Postal
+          </label>
+          <input
+            type="text"
+            className="input w-full"
+            placeholder="Código Postal"
+            name="postcode"
+            id="postcode"
+            value={form.billing.postcode}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* País */}
+        <div className="flex flex-col">
+          <label className="label text-sm mb-2" htmlFor="country">
+            País
+          </label>
+          <input
+            type="text"
+            className="input w-full"
+            placeholder="País"
+            name="country"
+            id="country"
+            value={form.billing.country}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Email */}
+        <div className="flex flex-col">
+          <label className="label text-sm mb-2" htmlFor="email">
+            Email
+          </label>
+          <input
+            type="email"
+            className="input w-full"
+            placeholder="Email"
+            name="email"
+            id="email"
+            value={form.billing.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Teléfono */}
+        <div className="flex flex-col">
+          <label className="label text-sm mb-2" htmlFor="phone">
+            Teléfono
+          </label>
+          <input
+            type="tel"
+            className="input w-full"
+            placeholder="Teléfono"
+            name="phone"
+            id="phone"
+            value={form.billing.phone}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Botón */}
         <button
           type="submit"
-          className="md:col-span-2 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+          className="mt-4 sm:col-span-2 btn btn-accent hover:btn-active transition w-full"
         >
           Finalizar pedido
         </button>
-      </form>
-    </div>
+      </fieldset>
+    </form>
   );
 }
 

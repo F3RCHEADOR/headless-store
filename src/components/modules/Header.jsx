@@ -204,6 +204,7 @@ const Header = ({ cartItem, isAuthenticated, setUserLogout }) => {
             </svg>
             <span className="ml-1.5">
               {" "}
+              {location.pathname === "/login" && "Logueo"}
               {location.pathname === "/" && "Home"}
               {location.pathname === "/contact" && "Contacto"}
               {location.pathname === "/checkout" && "CheckOut"}

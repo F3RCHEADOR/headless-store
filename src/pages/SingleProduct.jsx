@@ -4,6 +4,7 @@ import { getExpecificProduct, getProductsWithSameTags } from "../lib/api";
 import Loader from "../components/utils/Loader";
 import { useMyStore } from "../lib/useMyStore";
 import { getProductAttributeOptions } from "../components/utils/ColorsProducts";
+import ProductCard from "../components/products/ProductCard";
 
 const COLOR_ATTR = "Color";
 const SIZE_ATTR = "Talla";
@@ -60,9 +61,10 @@ const SingleProduct = ({ addToCart }) => {
   return loader ? (
     <Loader />
   ) : (
+    <>
     <section className="text-gray-600 body-font overflow-hidden">
       <div className="container px-5 py-24 mx-auto">
-        <div className="lg:w-4/5 mx-auto flex flex-wrap">
+        <div className="lg:w-3/5 mx-auto flex flex-wrap">
           <img
             alt={singleProduct?.name || "Producto"}
             className="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded"
@@ -86,7 +88,7 @@ const SingleProduct = ({ addToCart }) => {
               /
               {singleProduct.tags?.map((tag, index) => (
                 <span
-                  className="ml-1 text-xs border rounded-lg p-0.5 text-primary"
+                  className="ml-1 text-xs border rounded-lg px-1 text-primary"
                   key={index}
                 >
                   {tag.name || " "}{" "}
@@ -181,6 +183,15 @@ const SingleProduct = ({ addToCart }) => {
         </div>
       </div>
     </section>
+    <hr className="border-t border-dashed w-[90%] mx-auto my-6"/>
+    <div className="grid sm:grid-cols-2 lg:grid-cols-3 max-w-screen place-items-center gap-x-2 gap-y-8 p-4  mx-auto mb-4">
+    {relatedProducts.map((singleProduct, index) => (
+            <ProductCard key={index} {...singleProduct} addToCart={addToCart} />
+          ))}
+    </div>
+    </>
+
+
   );
 };
 

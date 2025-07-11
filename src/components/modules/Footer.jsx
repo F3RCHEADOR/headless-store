@@ -15,7 +15,7 @@ const Footer = () => {
         </svg>
         <p>Copyright © {new Date().getFullYear()} - All right reserved</p>
       </aside>
-      <nav className="flex items-center  justify-start space-x-8 mt-3 ml-4 sm:ml-0 mb-1 sm:mb-0 sm:my-0 md:space-x-0 sm:justify-end md:justify-evenly max-w-md">
+      <nav className="flex items-center  justify-start space-x-8 mt-3 ml-4 sm:ml-0 mb-1 sm:mb-0 sm:my-0 md:space-x-6 sm:justify-end md:justify-center max-w-md">
         <a>
           <svg
             xmlns="http://www.w3.org/2000/svg"

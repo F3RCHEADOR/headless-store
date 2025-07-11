@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 // Datos de ejemplo para el carrito
 
-const Cart = ({ onRemoveProduct, cart, reduceFromCart, addToCart }) => {
+const Cart = ({ removeFromCart, cart, reduceFromCart, addToCart }) => {
   const [cartItems, setCartItems] = useState(cart) || [];
   const navigate = useNavigate();
 
@@ -14,6 +14,7 @@ const Cart = ({ onRemoveProduct, cart, reduceFromCart, addToCart }) => {
   
   useEffect(() => {
     setCartItems(cart);
+
   }, [cart]);
 
   const renderProductPrice = ({ price, regular_price, sale_price }) => {
@@ -39,6 +40,8 @@ const Cart = ({ onRemoveProduct, cart, reduceFromCart, addToCart }) => {
       }, 0)
       .toFixed(2);
   };
+
+  console.log(cart)
 
   return (
     <div className="container mx-auto px-4 py-8 min-h-[60vh]">
@@ -67,7 +70,7 @@ const Cart = ({ onRemoveProduct, cart, reduceFromCart, addToCart }) => {
                   <th>{idx + 1}</th>
                   <td>
                     <img
-                      src={item?.images?.[0].src}
+                      src={item?.images?.[0].src || item?.image}
                       alt={item.name}
                       className="w-16 h-16 object-cover hover:scale-110 transition-all rounded"
                     />
@@ -99,8 +102,8 @@ const Cart = ({ onRemoveProduct, cart, reduceFromCart, addToCart }) => {
                   </td>
                   <td className="text-center">
                     <button
-                      onClick={() => onRemoveProduct(item)}
-                      className="text-red-500 hover:text-red-700 font-semibold"
+                      onClick={() => removeFromCart(item)}
+                      className="text-red-500 hover:text-red-700 font-semibold cursor-pointer"
                     >
                       Eliminar
                     </button>

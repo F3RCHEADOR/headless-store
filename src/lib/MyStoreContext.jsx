@@ -62,13 +62,31 @@ export const MyStoreProvider = ({ children }) => {
   };
 
   const removeFromCart = (productExistent) => {
-    if (window.confirm("Are you sure want to this item?")) {
-      const updateCart = cart.filter((item) => item.id !== productExistent.id);
-      setCart(updateCart);
-      localStorage.setItem("cart", JSON.stringify(updateCart));
-
-      toast.warning("Product removed from Cart!");
-    }
+    toast(({ closeToast }) => (
+      <div className="text-sm">
+        <p className="mb-2">Are you sure you want to remove this item?</p>
+        <div className="flex gap-2">
+          <button
+            onClick={() => {
+              const updateCart = cart.filter((item) => item.id !== productExistent.id);
+              setCart(updateCart);
+              localStorage.setItem("cart", JSON.stringify(updateCart));
+              toast.warning("Product removed from Cart!");
+              closeToast();
+            }}
+            className="px-3 py-1 bg-error text-base-content rounded"
+          >
+            Yes
+          </button>
+          <button
+            onClick={closeToast}
+            className="px-3 py-1 bg-neutral text-white rounded"
+          >
+            No
+          </button>
+        </div>
+      </div>
+    ), { autoClose: false });
   };
 
   const clearCart = () => {
@@ -116,6 +134,7 @@ export const MyStoreProvider = ({ children }) => {
         isAuthenticated,
         loggedUserData,
         cart,
+        removeFromCart,
       }}
     >
       {children}

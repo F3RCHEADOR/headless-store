@@ -13,7 +13,7 @@ import Account from "./pages/auth/Account";
 import Login from "./pages/auth/Login";
 import { ToastContainer } from "react-toastify";
 import { useMyStore } from "./lib/useMyStore";
-import ThemeToggle from "./components/utils/ThemeToggle";
+import NotFound from "./pages/NotFound";
 
 function App() {
   const {
@@ -57,7 +57,7 @@ function App() {
             path="/cart"
             element={
               <Cart
-                onRemoveProduct={removeFromCart}
+              removeFromCart={removeFromCart}
                 cart={cart}
                 reduceFromCart={reduceFromCart}
                 addToCart={addToCart}
@@ -80,8 +80,9 @@ function App() {
           />
           <Route
             path="/login"
-            element={<Login isAuthenticated={setUserLoggedStatus} />}
+            element={<Login isAuthenticated={setUserLoggedStatus}  />}
           />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </MainLayout>
     </Router>
