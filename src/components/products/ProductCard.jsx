@@ -10,6 +10,7 @@ const ProductCard = ({
   regular_price,
   sale_price,
   categories,
+  tags,
   addToCart,
 }) => {
   const navigate = useNavigate();
@@ -45,10 +46,10 @@ const ProductCard = ({
         </button>
       </figure>
       <div className="card-body">
-        <h2 className="card-title text-secondary">
+        <h2 className="card-title text-base-content">
           {name}
           {/* Puedes mostrar un badge "NEW" si el producto es nuevo, aquí es solo un ejemplo */}
-          <div className="badge badge-secondary">NEW</div>
+          <div className="badge badge-secondary">{categories.map((category) => `${category.name}`)}</div>
         </h2>
         <p>{renderProductPrice({ price, regular_price, sale_price })}</p>
         <div
@@ -56,12 +57,12 @@ const ProductCard = ({
           dangerouslySetInnerHTML={{ __html: short_description }}
         />
         <div className="card-actions justify-end ">
-          {categories.map((category, index) => (
+          {tags.map((tag, index) => (
             <div
               key={index}
-              className="badge badge-outline bg-secondary-content text-primary"
+              className="badge badge-outline  text-primary"
             >
-              {category.name}
+              {tag.name}
             </div>
           ))}
         </div>

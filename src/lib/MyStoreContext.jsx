@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { MyStoreContext } from "./MyStoreContext.js";
 import { toast } from "react-toastify";
 
-
 export const MyStoreProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -13,14 +12,20 @@ export const MyStoreProvider = ({ children }) => {
       return (
         <>
           <div className="inline-flex space-x-2">
-            <div className="stat-value line-through text-lg text-secondary">${regular_price || price}</div>
+            <div className="stat-value line-through text-lg text-base-content">
+              ${regular_price || price}
+            </div>
             <div className="stat-value text-lg text-red-500">${sale_price}</div>
           </div>
         </>
       );
     }
 
-    return <div className="stat-value mt-1 text-lg text-secondary">${regular_price || price}</div>;
+    return (
+      <div className="stat-value mt-1 text-lg text-base-content">
+        ${regular_price || price}
+      </div>
+    );
   };
 
   const addToCart = (product) => {
@@ -111,7 +116,6 @@ export const MyStoreProvider = ({ children }) => {
         isAuthenticated,
         loggedUserData,
         cart,
-        
       }}
     >
       {children}

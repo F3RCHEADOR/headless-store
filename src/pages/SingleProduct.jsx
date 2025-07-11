@@ -1,39 +1,52 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getExpecificProduct } from "../lib/api";
+import { getExpecificProduct, getProductsWithSameTags } from "../lib/api";
 import Loader from "../components/utils/Loader";
 import { useMyStore } from "../lib/useMyStore";
 import { getProductAttributeOptions } from "../components/utils/ColorsProducts";
+
+const COLOR_ATTR = "Color";
+const SIZE_ATTR = "Talla";
 
 const SingleProduct = ({ addToCart }) => {
   const { renderProductPrice } = useMyStore();
   const { id } = useParams();
 
-  const [singleProduct, setSingleProduc] = useState([]);
+  const [singleProduct, setSingleProduc] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState([]);
   const [loader, setLoader] = useState(true);
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const data = await getExpecificProduct(id);
-      console.log(data);
-      setSingleProduc(data);
-      setLoader(false);
+      try {
+        const product = await getExpecificProduct(id);
+        setSingleProduc(product);
+
+        if (product.tags && product.tags.length > 0) {
+          const tagId = product.tags[0].id;
+          const related = await getProductsWithSameTags(tagId);
+          const filteredRelated = related.filter((p) => p.id !== product.id);
+          setRelatedProducts(filteredRelated);
+        }
+      } catch (error) {
+        console.error("Error loading product or related products", error);
+      } finally {
+        setLoader(false);
+      }
     };
+
     fetchProduct();
   }, [id]);
 
-  const colorOptions = getProductAttributeOptions(
-    singleProduct.attributes,
-    "Color"
-  );
+  if (loader) return <Loader />;
 
-  const sizeOptions = getProductAttributeOptions(
-    singleProduct.attributes,
-    "Talla"
-  );
-
+  const colorOptions = getProductAttributeOptions(singleProduct.attributes, COLOR_ATTR);
+  const attributeKeys = Object.keys(singleProduct.attributes);
+  const firstAttribute = attributeKeys[0]; 
+  const sizeOptions = getProductAttributeOptions(singleProduct.attributes, firstAttribute);
+  
   const colorClasses = {
     white: "bg-white",
     black: "bg-black",

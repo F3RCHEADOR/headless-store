@@ -27,27 +27,27 @@ const HeroBanner = () => {
   return loading ? (
     <Loader />
   ) : (
-    <div className="hero bg-base-200 min-h-screen z-40 -mt-4 overflow-auto">
+    <div className="hero bg-base-200 min-h-screen z-40 -mt-4 ">
       <div className="hero-content flex-col items-center lg:flex-row-reverse">
         {heroInfo.featuredImage && (
           <img
             src={heroInfo.featuredImage}
-            className="min-w-56 md:max-w-lg rounded-lg shadow-2xl"
+            className="min-w-56 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg rounded-lg shadow-2xl p-2.5 md:p-1"
             alt="Imagen destacada"
           />
         )}
         <div>
           <h1
-            className="text-5xl font-bold"
+            className="text-2xl sm:text-4xl md:text-5xl font-bold"
             dangerouslySetInnerHTML={{ __html: heroInfo.title }}
           />
           <div
-            className="py-6"
+            className="py-6  text-sm md:text-base"
             dangerouslySetInnerHTML={{ __html: heroInfo.excerpt }}
           />
           <button
             onClick={handleRedirectToProducts}
-            className="btn btn-primary flex justify-center mx-auto md:mx-4"
+            className="btn btn-primary flex justify-center mx-auto md:mx-4 rounded"
           >
             Ver productos
           </button>

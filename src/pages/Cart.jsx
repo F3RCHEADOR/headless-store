@@ -121,7 +121,7 @@ const Cart = ({ onRemoveProduct, cart, reduceFromCart, addToCart }) => {
           <div className="flex justify-end mt-6">
             <button
               onClick={handleGoToCheckout}
-              className="w-full max-w-xs bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded transition"
+              className="w-full max-w-xs bg-primary/80 hover:bg-primary text-base-content font-semibold py-2 px-4 rounded transition"
             >
               Ir a pagar
             </button>

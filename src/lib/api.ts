@@ -7,6 +7,9 @@ const client_key = import.meta.env.VITE_CLIENT_KEY;
 const client_secret = import.meta.env.VITE_CLIENT_SECRET;
 const wordpress_url = import.meta.env.VITE_WORDPRESS_URL;
 
+
+import qs from 'qs';
+
 const generateOAuthSignature = (url: string, method: string = 'GET', params: Record<string, any> = {}) => {
   const nonce = Math.random().toString(36).substring(2);
   const timestamp = Math.floor(Date.now() / 1000);
@@ -19,21 +22,38 @@ const generateOAuthSignature = (url: string, method: string = 'GET', params: Rec
     oauth_version: '1.0',
   };
 
-  const allParams = { ...oauthParams, ...params };
+  // Extraer parámetros de la URL si existen
+  const urlObj = new URL(url);
+  const urlParams: Record<string, string> = {};
+  for (const [key, value] of urlObj.searchParams.entries()) {
+    urlParams[key] = value;
+  }
 
-  const paramString = Object.keys(allParams)
+  // Unir todo: params manuales, params en URL, y oauth
+  const allParams = {
+    ...oauthParams,
+    ...urlParams,
+    ...params,
+  };
+
+  // Construir base string
+  const sortedParamString = Object.keys(allParams)
     .sort()
     .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(allParams[key])}`)
     .join('&');
 
-  const baseUrl = url.split('?')[0]; // Ensure no query params in the base URL
-  const baseString = `${method.toUpperCase()}&${encodeURIComponent(baseUrl)}&${encodeURIComponent(paramString)}`;
-  const signingKey = `${encodeURIComponent(client_secret)}&`;
+  const baseUrl = `${urlObj.origin}${urlObj.pathname}`;
+  const baseString = `${method.toUpperCase()}&${encodeURIComponent(baseUrl)}&${encodeURIComponent(sortedParamString)}`;
 
+  const signingKey = `${encodeURIComponent(client_secret)}&`;
   const signature = CryptoJS.HmacSHA1(baseString, signingKey).toString(CryptoJS.enc.Base64);
 
-  return { ...oauthParams, oauth_signature: encodeURIComponent(signature) };
+  return {
+    ...oauthParams,
+    oauth_signature: signature,
+  };
 };
+
 
 
 const api = axios.create({
@@ -89,6 +109,26 @@ export const getAllProducts = async () => {
     throw error;
   }
 }
+
+export const getProductsWithSameTags = async (tagId: string) => {
+  try {
+    const endpoint = "wc/v3/products";
+    const url = `${wordpress_url}${endpoint}?tag=${tagId}`;
+    const oauthParams = generateOAuthSignature(url);
+
+    const response = await api.get(url, {
+      params: oauthParams,
+    });
+
+    console.log(response.data)
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching products:", error.response ? error.response.data : error);
+    throw error;
+  }
+};
+
 
 
 export const getExpecificProduct = async (productId: string) => {
