@@ -2,80 +2,125 @@
 const OrderDetailModal = ({ order, onClose, onDownload }) => {
   if (!order) return null;
 
+  const getStatusBadge = (status) => {
+    const statusConfig = {
+      'completed': { color: 'success', text: 'Completado' },
+      'processing': { color: 'info', text: 'Procesando' },
+      'pending': { color: 'warning', text: 'Pendiente' },
+      'cancelled': { color: 'error', text: 'Cancelado' },
+      'refunded': { color: 'neutral', text: 'Reembolsado' }
+    };
+    
+    const config = statusConfig[status] || { color: 'neutral', text: status };
+    return <span className={`badge badge-${config.color} badge-lg`}>{config.text}</span>;
+  };
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg p-8 max-w-2xl w-full relative">
-        <button
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-          onClick={onClose}
-        >
-          ✕
-        </button>
-        <h2 className="text-2xl font-bold mb-4">Pedido #{order.number}</h2>
-        <div className="mb-2">
-          <span className="font-semibold">Estado:</span> {order.status}
+    <div className="modal modal-open">
+      <div className="modal-box max-w-4xl">
+        <div className="flex justify-between items-start mb-6">
+          <div>
+            <h2 className="text-2xl font-bold">Pedido #{order.number}</h2>
+            <div className="mt-2">{getStatusBadge(order.status)}</div>
+          </div>
+          <button
+            className="btn btn-sm btn-circle btn-ghost"
+            onClick={onClose}
+          >
+            ✕
+          </button>
         </div>
-        <div className="mb-2">
-          <span className="font-semibold">Fecha:</span>{" "}
-          {order.date_created?.split("T")[0]}
-        </div>
-        <div className="mb-2">
-          <span className="font-semibold">Total:</span> {order.currency_symbol}
-          {order.total}
-        </div>
-        <div className="mb-2">
-          <span className="font-semibold">Método de pago:</span>{" "}
-          {order.payment_method_title}
-        </div>
-        <div className="mb-2">
-          <span className="font-semibold">Dirección de envío:</span>
-          <div className="ml-2 text-sm">
-            {order.billing.first_name} {order.billing.last_name}
-            <br />
-            {order.billing.address_1} {order.billing.address_2}
-            <br />
-            {order.billing.city}, {order.billing.state}, {order.billing.country}
-            <br />
-            CP: {order.billing.postcode}
-            <br />
-            Email: {order.billing.email}
-            <br />
-            Tel: {order.billing.phone}
+
+        {/* Información general */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="card bg-base-200">
+            <div className="card-body p-4">
+              <h3 className="card-title text-lg mb-3">Información del Pedido</h3>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="font-medium">Fecha:</span>
+                  <span>{order.date_created?.split("T")[0]}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium">Total:</span>
+                  <span className="font-bold text-lg">{order.currency_symbol}{order.total}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium">Método de pago:</span>
+                  <span>{order.payment_method_title}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="card bg-base-200">
+            <div className="card-body p-4">
+              <h3 className="card-title text-lg mb-3">Dirección de Envío</h3>
+              <div className="text-sm space-y-1">
+                <div className="font-medium">{order.billing.first_name} {order.billing.last_name}</div>
+                <div>{order.billing.address_1} {order.billing.address_2}</div>
+                <div>{order.billing.city}, {order.billing.state}, {order.billing.country}</div>
+                <div>CP: {order.billing.postcode}</div>
+                <div className="divider my-2"></div>
+                <div>📧 {order.billing.email}</div>
+                <div>📞 {order.billing.phone}</div>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="mt-4">
-          <h3 className="font-semibold mb-2">Productos:</h3>
-          <ul className="divide-y">
-            {order.line_items.map((item) => (
-              <li key={item.id} className="flex items-center py-2">
-                <img
-                  src={item.image?.src}
-                  alt={item.name}
-                  className="w-14 h-14 object-cover rounded mr-4 border"
-                />
-                <div>
-                  <div className="font-medium">{item.name}</div>
-                  <div className="text-sm text-gray-600">
-                    Cantidad: {item.quantity} | Precio unitario:{" "}
-                    {order.currency_symbol}
-                    {item.price}
+
+        {/* Productos */}
+        <div className="card bg-base-100 border">
+          <div className="card-body p-4">
+            <h3 className="card-title text-lg mb-4">Productos</h3>
+            <div className="space-y-4">
+              {order.line_items.map((item) => (
+                <div key={item.id} className="flex items-center gap-4 p-3 bg-base-200 rounded-lg">
+                  <div className="avatar">
+                    <div className="w-16 h-16 rounded-lg">
+                      <img
+                        src={item.image?.src || '/placeholder-product.jpg'}
+                        alt={item.name}
+                        className="object-cover"
+                      />
+                    </div>
                   </div>
-                  <div className="text-sm text-gray-600">
-                    Subtotal: {order.currency_symbol}
-                    {item.subtotal}
+                  <div className="flex-1">
+                    <h4 className="font-semibold">{item.name}</h4>
+                    <div className="text-sm text-base-content/70 space-y-1">
+                      <div>Cantidad: {item.quantity}</div>
+                      <div>Precio unitario: {order.currency_symbol}{item.price}</div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-bold text-lg">{order.currency_symbol}{item.subtotal}</div>
                   </div>
                 </div>
-              </li>
-            ))}
-          </ul>
+              ))}
+            </div>
+          </div>
         </div>
-        <button
-          className="mt-6 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-          onClick={() => onDownload(order)}
-        >
-          Descargar Detalles
-        </button>
+
+        {/* Acciones */}
+        <div className="modal-action">
+          <button
+            className="btn btn-ghost"
+            onClick={onClose}
+          >
+            Cerrar
+          </button>
+          <button
+            className="btn btn-success"
+            onClick={() => onDownload(order)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Descargar Detalles
+          </button>
+        </div>
       </div>
+      <div className="modal-backdrop" onClick={onClose}></div>
     </div>
   );
 };

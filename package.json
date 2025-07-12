@@ -10,12 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@paypal/react-paypal-js": "^8.8.3",
     "@tailwindcss/vite": "^4.1.11",
     "axios": "^1.10.0",
     "crypto-js": "^4.2.0",
     "leaflet": "^1.9.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-head": "^3.4.2",
+    "react-helmet": "^6.1.0",
     "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.6.3",
     "react-toastify": "^11.0.5"

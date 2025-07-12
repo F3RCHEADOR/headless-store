@@ -207,7 +207,7 @@ const Header = ({ cartItem, isAuthenticated, setUserLogout }) => {
               {location.pathname === "/login" && "Logueo"}
               {location.pathname === "/" && "Home"}
               {location.pathname === "/contact" && "Contacto"}
-              {location.pathname === "/checkout" && "CheckOut"}
+              {location.pathname === "/checkout" && "Finalizar Compra"}
               {location.pathname === "/my-orders" && "My Orders"}
               {location.pathname === "/cart" && "Carrito"}
               {location.pathname === "/products" && "Productos"}

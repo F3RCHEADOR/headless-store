@@ -14,6 +14,7 @@ import Login from "./pages/auth/Login";
 import { ToastContainer } from "react-toastify";
 import { useMyStore } from "./lib/useMyStore";
 import NotFound from "./pages/NotFound";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 function App() {
   const {
@@ -28,63 +29,76 @@ function App() {
     setUserLoggedStatus,
   } = useMyStore();
 
+  const clientID = import.meta.env.VITE_PAYPAL_CLIENT_ID;
+
   return (
     <Router>
       <ToastContainer />
-      <MainLayout
-        isAuthenticated={isAuthenticated}
-        setUserLogout={setUserLogout}
-        cartItem={cart}
+      <PayPalScriptProvider 
+        options={{ 
+          "client-id": clientID,
+          currency: "USD",
+          intent: "capture"
+        }}
       >
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route
-            path="/products"
-            element={<Products addToCart={addToCart} />}
-          />
-          <Route
-            path="/single-product/:id"
-            element={
-              <SingleProduct
-                addToCart={addToCart}
-                reduceFromCart={reduceFromCart}
-              />
-            }
-          />
-          <Route
-            path="/cart"
-            element={
-              <Cart
-              removeFromCart={removeFromCart}
-                cart={cart}
-                reduceFromCart={reduceFromCart}
-                addToCart={addToCart}
-              />
-            }
-          />
-          <Route
-            path="/checkout"
-            element={
-              <Checkout clearCart={clearCart} loggedUserData={loggedUserData} />
-            }
-          />
-          <Route
-            path="/my-orders"
-            element={<MyOrders loggedUserData={loggedUserData} />}
-          />
-          <Route
-            path="/account"
-            element={<Account loggedUserData={loggedUserData} />}
-          />
-          <Route
-            path="/login"
-            element={<Login isAuthenticated={setUserLoggedStatus}  />}
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </MainLayout>
+        <MainLayout
+          isAuthenticated={isAuthenticated}
+          setUserLogout={setUserLogout}
+          cartItem={cart}
+        >
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route
+              path="/products"
+              element={<Products addToCart={addToCart} />}
+            />
+            <Route
+              path="/single-product/:id"
+              element={
+                <SingleProduct
+                  addToCart={addToCart}
+                  reduceFromCart={reduceFromCart}
+                />
+              }
+            />
+            <Route
+              path="/cart"
+              element={
+                <Cart
+                  removeFromCart={removeFromCart}
+                  cart={cart}
+                  reduceFromCart={reduceFromCart}
+                  addToCart={addToCart}
+                />
+              }
+            />
+            <Route
+              path="/checkout"
+              element={
+                <Checkout
+                  clearCart={clearCart}
+                  loggedUserData={loggedUserData}
+                />
+              }
+            />
+            <Route
+              path="/my-orders"
+              element={<MyOrders loggedUserData={loggedUserData} />}
+            />
+            <Route
+              path="/account"
+              element={<Account loggedUserData={loggedUserData} />}
+            />
+            <Route
+              path="/login"
+              element={<Login isAuthenticated={setUserLoggedStatus} />}
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </MainLayout>
+      </PayPalScriptProvider>
     </Router>
   );
 }
