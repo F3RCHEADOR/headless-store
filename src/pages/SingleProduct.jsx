@@ -21,6 +21,7 @@ const SingleProduct = ({ addToCart }) => {
 
   useEffect(() => {
     const fetchProduct = async () => {
+      setLoader(true); // <-- Agrega esto aquí
       try {
         const product = await getExpecificProduct(id);
         setSingleProduc(product);

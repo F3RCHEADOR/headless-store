@@ -93,7 +93,7 @@ function App() {
             />
             <Route
               path="/login"
-              element={<Login isAuthenticated={setUserLoggedStatus} />}
+              element={<Login setIsAuthenticated={setUserLoggedStatus} isAuthenticated={isAuthenticated} />}
             />
             <Route path="*" element={<NotFound />} />
           </Routes>

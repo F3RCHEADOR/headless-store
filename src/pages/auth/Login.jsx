@@ -4,11 +4,10 @@ import Loader from "../../components/utils/Loader";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-export default function Login({ isAuthenticated }) {
+export default function Login({ isAuthenticated, setIsAuthenticated }) {
   const [isLogin, setIsLogin] = useState(true);
   const [loader, setLoader] = useState(false);
   const navigate = useNavigate();
-
 
   const [form, setForm] = useState({
     name: "",
@@ -19,7 +18,7 @@ export default function Login({ isAuthenticated }) {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/"); // o a donde quieras redirigir
+      navigate("/");
     }
   }, [isAuthenticated, navigate]);
 
@@ -46,10 +45,9 @@ export default function Login({ isAuthenticated }) {
           username: "",
           password: "",
         });
-        toast.success("User registered");
+        toast.success("Usuario registrado");
       } catch (error) {
-        console.log(error);
-        toast.error("User not registered");
+        toast.error("No se pudo registrar el usuario");
       }
     } else {
       try {
@@ -64,8 +62,8 @@ export default function Login({ isAuthenticated }) {
         });
 
         localStorage.setItem("auth_token", response.token);
-        toast.success("User Loged");
-        isAuthenticated(true);
+        toast.success("Sesión iniciada");
+        setIsAuthenticated(true);
 
         const loggedUserData = {};
         const userData = await getUserData(response.token);
@@ -79,111 +77,132 @@ export default function Login({ isAuthenticated }) {
 
         navigate("../");
       } catch (error) {
-        toast.error("Invalid login details");
-        console.log(error);
+        toast.error("Datos de acceso inválidos");
       }
     }
     setLoader(false);
   };
 
-
-
   return loader ? (
     <Loader />
   ) : (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="hero bg-base-200 min-h-screen">
-        <div className="hero-content flex-col lg:flex-row-reverse">
-          <div className="text-center lg:text-left">
-            <h1 className="text-5xl font-bold">Login now!</h1>
-            <p className="py-6">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
-              et a id nisi.
-            </p>
-          </div>
-          <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-            <div className="card-body">
-              <fieldset className="fieldset">
-                {!isLogin && (
-                  <>
-                    <label className="label">Nombre</label>
-                    <input
-                      type="text"
-                      className="input"
-                      placeholder="Jonh Doe"
-                      id="name"
-                      name="name"
-                      value={form.name}
-                      onChange={handleChange}
-                    />
-                    <label className="label">Email</label>
-                    <input
-                      type="email"
-                      className="input"
-                      placeholder="Email"
-                      id="email"
-                      name="email"
-                      value={form.email}
-                      onChange={handleChange}
-                    />
-                  </>
-                )}
-                <label className="label">Username</label>
+    <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-base-200 to-secondary/10 relative overflow-hidden transition-colors duration-500">
+      {/* Onda decorativa arriba */}
+      <svg
+        className="absolute top-0 left-0 w-full h-32 md:h-40 lg:h-48"
+        viewBox="0 0 1440 320"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        preserveAspectRatio="none"
+      >
+        <path
+          fill="currentColor"
+          className="text-primary/20 dark:text-secondary/30 transition-colors duration-500"
+          d="M0,160L60,170.7C120,181,240,203,360,197.3C480,192,600,160,720,154.7C840,149,960,171,1080,186.7C1200,203,1320,213,1380,218.7L1440,224L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"
+        />
+      </svg>
+
+      <div className="relative z-10 w-full max-w-md mx-auto">
+        <div className="bg-base-100 rounded-2xl shadow-2xl p-8">
+          <h1 className="text-4xl font-extrabold text-center text-primary mb-2">
+            {isLogin ? "Inicia sesión" : "Crea tu cuenta"}
+          </h1>
+          <p className="text-center text-base-content/70 mb-6">
+            {isLogin
+              ? "Accede a tu cuenta para comprar y gestionar tus pedidos."
+              : "Regístrate para disfrutar de todos los beneficios de Headless Store."}
+          </p>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {!isLogin && (
+              <>
+                <label className="label" htmlFor="name">
+                  Nombre
+                </label>
                 <input
                   type="text"
-                  className="input"
-                  placeholder="Jonh123"
-                  id="username"
-                  name="username"
-                  value={form.username}
+                  className="input input-bordered w-full"
+                  placeholder="John Doe"
+                  id="name"
+                  name="name"
+                  value={form.name}
                   onChange={handleChange}
-                  autoComplete="off"
+                  required
                 />
-                <label className="label">Password</label>
+                <label className="label" htmlFor="email">
+                  Email
+                </label>
                 <input
-                  type="password"
-                  className="input"
-                  placeholder="Password"
-                  id="password"
-                  name="password"
-                  value={form.password}
+                  type="email"
+                  className="input input-bordered w-full"
+                  placeholder="Email"
+                  id="email"
+                  name="email"
+                  value={form.email}
                   onChange={handleChange}
+                  required
                 />
+              </>
+            )}
+            <label className="label" htmlFor="username">
+              Usuario
+            </label>
+            <input
+              type="text"
+              className="input input-bordered w-full"
+              placeholder="John123"
+              id="username"
+              name="username"
+              value={form.username}
+              onChange={handleChange}
+              autoComplete="off"
+              required
+            />
+            <label className="label" htmlFor="password">
+              Contraseña
+            </label>
+            <input
+              type="password"
+              className="input input-bordered w-full"
+              placeholder="Contraseña"
+              id="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
 
-                <button type="submit" className="btn btn-neutral mt-4">
-                  {" "}
-                  {isLogin ? "Entrar" : "Registrarse"}
+            <button type="submit" className="btn btn-primary w-full mt-4">
+              {isLogin ? "Entrar" : "Registrarse"}
+            </button>
+          </form>
+          <div className="mt-6 text-center text-base-content/70">
+            {isLogin ? (
+              <>
+                ¿No tienes cuenta?{" "}
+                <button
+                  className="text-secondary hover:underline font-semibold"
+                  onClick={() => setIsLogin(false)}
+                  type="button"
+                >
+                  Regístrate
                 </button>
-              </fieldset>
-
-              <p className="mt-6 text-center text-gray-600">
-                {isLogin ? (
-                  <>
-                    ¿No tienes cuenta?{" "}
-                    <button
-                      className="text-blue-600 hover:underline font-semibold"
-                      onClick={() => setIsLogin(false)}
-                    >
-                      Regístrate
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    ¿Ya tienes cuenta?{" "}
-                    <button
-                      className="text-blue-600 hover:underline font-semibold"
-                      onClick={() => setIsLogin(true)}
-                    >
-                      Inicia sesión
-                    </button>
-                  </>
-                )}
-              </p>
-            </div>
+              </>
+            ) : (
+              <>
+                ¿Ya tienes cuenta?{" "}
+                <button
+                  className="text-secondary hover:underline font-semibold"
+                  onClick={() => setIsLogin(true)}
+                  type="button"
+                >
+                  Inicia sesión
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
-    </form>
+    </section>
   );
 }

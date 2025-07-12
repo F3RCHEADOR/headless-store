@@ -9,7 +9,7 @@ const Contact = () => {
     message: "",
   });
 
-  const position = [7.000858, -73.050195]; //Coordenadas de Piedecuesta
+  const position = [7.000858, -73.050195]; // Coordenadas de Piedecuesta
 
   const handleOnChangeFormData = (event) => {
     const { name, value } = event.target;
@@ -18,70 +18,118 @@ const Contact = () => {
 
   const handleFormSubmitData = (event) => {
     event.preventDefault();
+    // Aquí puedes agregar lógica para enviar el formulario
   };
 
   return (
-    <section className="text-gray-600 body-font relative">
-      <div className="container px-5 py-24 mx-auto flex sm:flex-nowrap flex-wrap sm:gap-4">
-        {/* Mapa con Leaflet */}
-        <div className="w-full md:w-1/2 lg:w-2/3 h-[300px] md:h-auto bg-gray-300 rounded-lg overflow-hidden mb-6 md:mb-0 order-2 md:order-1">
-          <MapContainer
-            center={position}
-            zoom={13}
-            scrollWheelZoom={false}
-            style={{ height: "100%", width: "100%" }}
+    <section className="min-h-screen bg-gradient-to-br from-base-100 via-base-200 to-base-100 px-4 py-20">
+      <div className="max-w-5xl mx-auto">
+        <h1 className="text-5xl font-extrabold text-center text-primary mb-4 drop-shadow-lg">
+          Contáctanos
+        </h1>
+        <p className="text-center text-lg text-base-content/70 mb-12 max-w-2xl mx-auto">
+          ¿Tienes alguna pregunta o sugerencia? ¡Escríbenos o visítanos!
+        </p>
+
+        <div className="grid md:grid-cols-2 gap-12 items-start">
+          {/* Formulario */}
+          <form
+            onSubmit={handleFormSubmitData}
+            className="bg-base-100 rounded-2xl shadow-lg p-8 flex flex-col gap-4 order-2 md:order-1"
           >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            <h2 className="text-2xl font-bold mb-2 text-primary">Envíanos un mensaje</h2>
+            <label className="text-base-content font-semibold" htmlFor="name">
+              Nombre
+            </label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              placeholder="John Doe"
+              className="input input-bordered w-full"
+              onChange={handleOnChangeFormData}
+              value={formData.name}
+              required
             />
-            <Marker position={position}>
-              <Popup>Tu negocio está aquí.</Popup>
-            </Marker>
-          </MapContainer>
-        </div>
 
-        {/* Formulario */}
-        <form
-          onSubmit={handleFormSubmitData}
-          className=" card bg-base-100 shadow-md shadow-primary md:ml-auto mx-auto  items-center-safe w-full md:w-auto md:py-8 my-8 md:mt-0 p-6 order-1 md:order-2"
-        >
-          <h2 className="text-2xl font-bold mb-2">Contáctanos</h2>
-          <p className="mb-5 text-base-content">
-            ¿Tienes alguna pregunta? ¡Escríbenos!
-          </p>
+            <label className="text-base-content font-semibold" htmlFor="email">
+              Email
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="example1@gmail.com"
+              className="input input-bordered w-full"
+              onChange={handleOnChangeFormData}
+              value={formData.email}
+              required
+            />
 
-
-          <label className="input my-2 ">
-            <span className="label">Nombre :</span>
-            <input type="text" placeholder="John Doe"  onChange={handleOnChangeFormData}
-            value={formData.name} />
-          </label>
-
-          <label className="input  my-2">
-            <span className="label">Email : </span>
-            <input type="text" placeholder="example1@gmail.com"  onChange={handleOnChangeFormData}
-            value={formData.email} />
-          </label>
-
-          <fieldset className="fieldset mb-2 w-full">
-            <legend className="fieldset-legend">Mensaje</legend>
+            <label className="text-base-content font-semibold" htmlFor="message">
+              Mensaje
+            </label>
             <textarea
-              className="textarea h-24"
-              placeholder="mensaje"
+              id="message"
+              name="message"
+              className="textarea textarea-bordered w-full h-24"
+              placeholder="Escribe tu mensaje aquí..."
               onChange={handleOnChangeFormData}
               value={formData.message}
+              required
             ></textarea>
-          </fieldset>
 
-          <button type="submit" className="btn btn-primary w-fit">
-            Enviar
-          </button>
+            <button
+              type="submit"
+              className="w-full py-3 bg-primary text-white font-bold rounded-full shadow-lg hover:bg-secondary transition-colors text-lg mt-2"
+            >
+              Enviar
+            </button>
+            <p className="text-xs mt-3 text-base-content/60 text-center">
+              ¡Te responderemos lo más pronto posible!
+            </p>
+          </form>
 
-          <p className="text-xs mt-3 text-base-content/60">
-            ¡Te responderemos lo más pronto posible!
-          </p>
-        </form>
+          {/* Mapa con Leaflet y datos de contacto */}
+          <div className="flex flex-col gap-6 order-1 md:order-2">
+            <div className="rounded-2xl overflow-hidden shadow-2xl border-4 border-secondary/30 bg-white/70 h-[300px]">
+              <MapContainer
+                center={position}
+                zoom={13}
+                scrollWheelZoom={false}
+                style={{ height: "100%", width: "100%" }}
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={position}>
+                  <Popup>¡Aquí estamos!</Popup>
+                </Marker>
+              </MapContainer>
+            </div>
+            <div className="bg-base-200 rounded-xl shadow p-6 flex flex-col gap-2">
+              <div>
+                <span className="font-bold text-primary">Email:</span>
+                <a href="mailto:info@headlessstore.com" className="block text-base-content hover:text-secondary transition">
+                  info@headlessstore.com
+                </a>
+              </div>
+              <div>
+                <span className="font-bold text-primary">Teléfono:</span>
+                <a href="tel:+1234567890" className="block text-base-content hover:text-secondary transition">
+                  +1 234 567 890
+                </a>
+              </div>
+              <div>
+                <span className="font-bold text-primary">Dirección:</span>
+                <span className="block text-base-content">
+                  Piedecuesta, Santander, Colombia
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

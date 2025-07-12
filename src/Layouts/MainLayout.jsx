@@ -10,7 +10,32 @@ const MainLayout = ({ children, cartItem, isAuthenticated, setUserLogout }) => {
         isAuthenticated={isAuthenticated}
         setUserLogout={setUserLogout}
       />
-      <main className="flex-grow -mt-12">{children}</main>
+      <main className="relative flex-grow -mt-12 z-40 bg-base-200 bg-gradient-to-br from-primary/20 via-base-200/80 to-secondary/20 backdrop-blur-md transition-colors duration-500 overflow-hidden">
+        {/* Onda decorativa arriba */}
+        <svg
+          className="absolute top-0 left-0 w-full h-32 md:h-40 lg:h-48 z-60"
+          viewBox="0 0 1440 320"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+          preserveAspectRatio="none"
+        >
+          <path
+            fill="currentColor"
+            className="text-primary/20 dark:text-secondary/30 transition-colors duration-500"
+            d="M0,160L60,170.7C120,181,240,203,360,197.3C480,192,600,160,720,154.7C840,149,960,171,1080,186.7C1200,203,1320,213,1380,218.7L1440,224L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"
+          />
+        </svg>
+
+        {/* Círculo decorativo abajo derecha */}
+        <div className="absolute bottom-[-10px] right-[-70px] w-60 h-60 rounded-full bg-secondary/20 dark:bg-primary/20 blur-2xl pointer-events-none"></div>
+
+
+        {/* Contenido principal */}
+        <div className="relative z-60">
+          {children}
+        </div>
+      </main>
       <Footer />
     </div>
   );

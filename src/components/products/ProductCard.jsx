@@ -1,5 +1,6 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useMyStore } from "../../lib/useMyStore.js";
+import Loader from "../utils/Loader"; // 1. Importa el Loader
 
 const ProductCard = ({
   id,
@@ -11,14 +12,26 @@ const ProductCard = ({
   sale_price,
   categories,
   tags,
+  onTagClick,
   addToCart,
+  loading, // 2. Recibe la prop loading
 }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { renderProductPrice } = useMyStore();
 
   const handleClick = () => {
     navigate(`/single-product/${id}`);
   };
+
+  // 3. Muestra el Loader si loading es true
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <Loader />
+      </div>
+    );
+  }
 
   return (
     <div className="card bg-base-100 w-full h-full  md:w-96 lg:w-80 px-1 py-2  shadow-md shadow-primary">
@@ -59,12 +72,19 @@ const ProductCard = ({
         />
         <div className="card-actions justify-end ">
           {tags.map((tag, index) => (
-            <div
+            <button
               key={index}
               className="badge badge-outline  text-primary"
+              onClick={() => {
+                if (location.pathname === "/products") {
+                  onTagClick(tag);
+                } else {
+                  navigate("/products", { state: { tag } });
+                }
+              }}
             >
               {tag.name}
-            </div>
+            </button>
           ))}
         </div>
         <button
