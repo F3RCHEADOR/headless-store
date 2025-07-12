@@ -8,7 +8,7 @@ const client_secret = import.meta.env.VITE_CLIENT_SECRET;
 const wordpress_url = import.meta.env.VITE_WORDPRESS_URL;
 
 
-import qs from 'qs';
+
 
 const generateOAuthSignature = (url: string, method: string = 'GET', params: Record<string, any> = {}) => {
   const nonce = Math.random().toString(36).substring(2);
@@ -86,6 +86,99 @@ export const getEntradas = async (entrada: string) => {
     });
 
     return posts;
+  } catch (error: any) {
+    console.error(error.response ? error.response.data : error);
+    throw error;
+  }
+};
+
+
+export const getAllPosts = async (page: number = 1, perPage: number = 10) => {
+  try {
+    const response = await api.get(`${wordpress_url}wp/v2/posts?_embed&page=${page}&per_page=${perPage}`);
+
+    const posts: Array<{
+      id: number;
+      title: string;
+      excerpt: string;
+      content: string;
+      date: string;
+      slug: string;
+      featuredImage: string | null;
+      author: string;
+      categories: string[];
+    }> = response.data.map((post: any) => {
+      const {
+        id,
+        title: { rendered: title },
+        excerpt: { rendered: excerpt },
+        content: { rendered: content },
+        date,
+        slug,
+        _embedded
+      } = post;
+
+      const featuredImage = _embedded?.['wp:featuredmedia']?.[0]?.source_url ?? null;
+      const author = _embedded?.author?.[0]?.name ?? 'Unknown';
+      const categories = _embedded?.['wp:term']?.[0]?.map((cat: any) => cat.name) ?? [];
+
+      return { 
+        id, 
+        title, 
+        excerpt, 
+        content, 
+        date, 
+        slug, 
+        featuredImage, 
+        author, 
+        categories 
+      };
+    });
+
+    // Filtrar el post "hola-mundo"
+    const filteredPosts = posts.filter(post => post.slug !== 'hola-mundo');
+
+    return filteredPosts;
+  } catch (error: any) {
+    console.error(error.response ? error.response.data : error);
+    throw error;
+  }
+};
+
+export const getPostBySlug = async (slug: string) => {
+  try {
+    const response = await api.get(`${wordpress_url}wp/v2/posts?slug=${slug}&_embed`);
+
+    if (response.data.length === 0) {
+      throw new Error('Post not found');
+    }
+
+    const post = response.data[0];
+    const {
+      id,
+      title: { rendered: title },
+      excerpt: { rendered: excerpt },
+      content: { rendered: content },
+      date,
+      slug: postSlug,
+      _embedded
+    } = post;
+
+    const featuredImage = _embedded?.['wp:featuredmedia']?.[0]?.source_url ?? null;
+    const author = _embedded?.author?.[0]?.name ?? 'Unknown';
+    const categories = _embedded?.['wp:term']?.[0]?.map((cat: any) => cat.name) ?? [];
+
+    return { 
+      id, 
+      title, 
+      excerpt, 
+      content, 
+      date, 
+      slug: postSlug, 
+      featuredImage, 
+      author, 
+      categories 
+    };
   } catch (error: any) {
     console.error(error.response ? error.response.data : error);
     throw error;

@@ -27,7 +27,7 @@ const HeroBanner = () => {
   return loading ? (
     <Loader />
   ) : (
-    <div className="hero bg-base-200 min-h-screen z-40 -mt-4 ">
+    <div className="hero bg-transparent min-h-screen z-40 -mt-4 ">
       <div className="hero-content flex-col items-center lg:flex-row-reverse">
         {heroInfo.featuredImage && (
           <img

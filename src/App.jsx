@@ -6,6 +6,8 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Products from "./pages/Products";
 import SingleProduct from "./pages/SingleProduct";
+import Blogs from "./pages/Blogs";
+import SingleBlog from "./pages/SingleBlog";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import MyOrders from "./pages/MyOrders";
@@ -63,6 +65,8 @@ function App() {
                 />
               }
             />
+            <Route path="/blogs" element={<Blogs />} />
+            <Route path="/blog/:slug" element={<SingleBlog />} />
             <Route
               path="/cart"
               element={
