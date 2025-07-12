@@ -74,7 +74,7 @@ const ProductCard = ({
           {tags.map((tag, index) => (
             <button
               key={index}
-              className="badge badge-outline  text-primary"
+              className="badge badge-outline hover:cursor-pointer transition hover:scale-x-105 hover:bg-primary hover:text-secondary-content text-primary"
               onClick={() => {
                 if (location.pathname === "/products") {
                   onTagClick(tag);
