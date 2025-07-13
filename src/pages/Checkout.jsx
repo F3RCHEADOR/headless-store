@@ -333,7 +333,7 @@ function Checkout({ clearCart, loggedUserData }) {
           </div>
 
           {/* PayPal */}
-          <div className="bg-base-200 border-base-300 rounded-box p-6">
+          <div className="bg-base-200 border-base-300 rounded-box p-6 ">
             <h2 className="text-xl font-semibold mb-4">Pagar con PayPal</h2>
             <PayPalButtons
               style={{ layout: "vertical" }}

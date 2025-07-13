@@ -46,10 +46,10 @@ const Blogs = () => {
       <div className="container px-5 py-24 mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl font-bold text-base-content mb-4">
             Nuestro Blog
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-base-content max-w-2xl mx-auto">
             Descubre las últimas noticias, consejos y novedades sobre nuestros productos y el mundo del comercio electrónico.
           </p>
         </div>
@@ -68,7 +68,7 @@ const Blogs = () => {
             <button
               onClick={loadMore}
               disabled={loader}
-              className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+              className="px-8 py-3 bg-blue-600 text-base-content rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
             >
               {loader ? "Cargando..." : "Cargar más posts"}
             </button>
@@ -85,12 +85,12 @@ const Blogs = () => {
         {/* No Posts */}
         {!loader && posts.length === 0 && (
           <div className="text-center mt-12">
-            <div className="text-gray-400 mb-4">
+            <div className="text-base-content mb-4">
               <svg className="w-16 h-16 mx-auto" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No hay posts disponibles</h3>
+            <h3 className="text-lg font-medium text-info mb-2">No hay posts disponibles</h3>
             <p className="text-gray-500">Pronto tendremos contenido interesante para ti.</p>
           </div>
         )}

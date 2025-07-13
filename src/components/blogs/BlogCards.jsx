@@ -26,7 +26,7 @@ const BlogCard = ({ post }) => {
           <img
             src={post.featuredImage}
             alt={post.title}
-            className="1/4 h-full object-cover hover:scale-105 transition-transform duration-300 mx-auto"
+            className="1/4 h-full object-cover hover:scale-105 transition-transform duration-300 mx-auto rounded-lg"
           />
         </div>
       )}

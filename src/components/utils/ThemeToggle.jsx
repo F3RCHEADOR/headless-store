@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
 const themes = [
-  "light", "dark", "cupcake", "bumblebee", "emerald", "corporate", "synthwave", "retro", "cyberpunk", "valentine", "halloween", "garden", "forest", "aqua", "lofi", "pastel", "fantasy", "wireframe", "black", "luxury", "dracula", "cmyk", "autumn", "business", "acid", "lemonade", "night", "coffee", "winter", "dim", "nord", "sunset", "caramellatte", "abyss", "silk",
+  "light", "dark","abyss", "acid", "aqua", "autumn", "black", "bumblebee", "business", "caramellatte", "coffee", "corporate", "cmyk", "cupcake", "cyberpunk", "dim", "dracula", "emerald", "fantasy", "forest", "garden", "halloween", "lemonade", "lofi", "luxury", "night", "nord", "pastel", "retro", "silk", "sunset", "synthwave", "valentine", "winter", "wireframe"
 ];
 
 export default function ThemeToggle() {
