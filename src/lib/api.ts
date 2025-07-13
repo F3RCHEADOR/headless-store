@@ -348,3 +348,62 @@ export const getOrdersByCustomer = async (customerId: string) => {
     throw error;
   }
 }
+
+// SEO manual para cada página
+export const manualSeoData = {
+  home: {
+    title: "Headless Store - Tu tienda moderna",
+    description: "Compra los mejores productos en nuestra tienda headless.",
+    url: "https://headless-store.com/",
+  },
+  about: {
+    title: "Sobre nosotros - Headless Store",
+    description: "Conoce más sobre nuestro equipo y misión.",
+    url: "https://headless-store.com/about",
+  },
+  contact: {
+    title: "Contacto - Headless Store",
+    description: "Ponte en contacto con nuestro equipo para cualquier consulta.",
+    url: "https://headless-store.com/contact",
+  },
+  products: {
+    title: "Productos - Headless Store",
+    description: "Descubre nuestra selección de productos.",
+    url: "https://headless-store.com/products",
+  },
+  cart: {
+    title: "Carrito - Headless Store",
+    description: "Revisa los productos en tu carrito.",
+    url: "https://headless-store.com/cart",
+  },
+  checkout: {
+    title: "Checkout - Headless Store",
+    description: "Finaliza tu compra de forma segura.",
+    url: "https://headless-store.com/checkout",
+  },
+  myorders: {
+    title: "Mis pedidos - Headless Store",
+    description: "Consulta el historial de tus pedidos.",
+    url: "https://headless-store.com/myorders",
+  },
+  blogs: {
+    title: "Blog - Headless Store",
+    description: "Lee las últimas novedades y artículos de nuestro blog.",
+    url: "https://headless-store.com/blogs",
+  },
+  login: {
+    title: "Iniciar sesión - Headless Store",
+    description: "Accede a tu cuenta para comprar y ver tus pedidos.",
+    url: "https://headless-store.com/login",
+  },
+  account: {
+    title: "Mi cuenta - Headless Store",
+    description: "Gestiona la información de tu cuenta.",
+    url: "https://headless-store.com/account",
+  },
+  notfound: {
+    title: "Página no encontrada - Headless Store",
+    description: "La página que buscas no existe.",
+    url: "https://headless-store.com/404",
+  },
+};

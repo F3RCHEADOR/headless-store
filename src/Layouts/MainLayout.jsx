@@ -1,10 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import Header from "../components/modules/Header";
 import Footer from "../components/modules/Footer";
+import SEO from "../components/utils/SEO";
+import { manualSeoData } from "../lib/api";
 
 const MainLayout = ({ children, cartItem, isAuthenticated, setUserLogout }) => {
+  const location = useLocation();
+  const [seo, setSeo] = useState(manualSeoData.home);
+
+  useEffect(() => {
+    // Mapeo de path a clave de manualSeoData
+    let slug = "home";
+    if (location.pathname !== "/") {
+      slug = location.pathname.replace(/^\//, "").replace(/\/$/, "").toLowerCase();
+      // Mapeo especial para rutas dinámicas
+      if (slug.startsWith("blog")) slug = "blogs";
+      if (slug.startsWith("singleblog")) slug = "blogs";
+      if (slug.startsWith("singleproduct")) slug = "products";
+      if (slug.startsWith("myorders")) slug = "myorders";
+      if (slug.startsWith("cart")) slug = "cart";
+      if (slug.startsWith("checkout")) slug = "checkout";
+      if (slug.startsWith("account")) slug = "account";
+      if (slug.startsWith("login")) slug = "login";
+      if (slug.startsWith("notfound")) slug = "notfound";
+    }
+    setSeo(manualSeoData[slug] || manualSeoData.home);
+  }, [location.pathname]);
+
   return (
     <div className="min-h-screen flex flex-col justify-between">
+      {seo && <SEO {...seo} />}
       <Header
         cartItem={cartItem}
         isAuthenticated={isAuthenticated}
@@ -29,7 +55,6 @@ const MainLayout = ({ children, cartItem, isAuthenticated, setUserLogout }) => {
 
         {/* Círculo decorativo abajo derecha */}
         <div className="absolute bottom-[-10px] right-[-70px] w-60 h-60 rounded-full bg-secondary/20 dark:bg-primary/20 blur-2xl pointer-events-none"></div>
-
 
         {/* Contenido principal */}
         <div className="relative z-60">
