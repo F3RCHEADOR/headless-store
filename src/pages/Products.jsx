@@ -40,7 +40,7 @@ const Product = ({ addToCart }) => {
   return loader ? (
     <Loader />
   ) : (
-    <section className="text-gray-600 body-font">
+    <section className="text-gray-600 body-font w-full">
       <div className="container px-5 py-24 mx-auto">
         <div className="mb-4">
           {selectedTag && (
@@ -52,7 +52,7 @@ const Product = ({ addToCart }) => {
             </button>
           )}
         </div>
-        <div className="grid gap-6 py-2 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid gap-6 py-2 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
           {products.map((singleProduct, index) => (
             <ProductCard
               key={index}

@@ -34,12 +34,12 @@ const ProductCard = ({
   }
 
   return (
-    <div className="card bg-base-100 w-full h-full  md:w-96 lg:w-80 px-1 py-2  shadow-md shadow-primary">
-      <figure className="group relative ">
+    <div className="card bg-base-100 w-full h-full  md:w-80 lg:w-80 px-1 py-2  shadow-md shadow-primary">
+      <figure className="group relative flex items-center justify-center mx-auto">
       <img
             src={images[0].src || "#"}
             alt={name}
-            className="object-cover object-center w-1/2 h-48 group-hover:scale-x-110 transition-all"
+            className="object-cover object-center w-full h-48 group-hover:scale-x-110 transition-all"
           />
         <button onClick={handleClick} className="absolute top-0 -right-1 cursor-pointer">
          

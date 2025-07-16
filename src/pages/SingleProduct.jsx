@@ -68,7 +68,7 @@ const SingleProduct = ({ addToCart }) => {
         <div className="lg:w-3/5 mx-auto flex flex-wrap">
           <img
             alt={singleProduct?.name || "Producto"}
-            className="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded"
+            className="lg:w-1/2 w-3/4  h-56 sm:h-auto lg:h-auto object-cover  object-center rounded mx-auto"
             src={
               singleProduct?.image ||
               singleProduct?.gallery_images?.[0]?.src ||
